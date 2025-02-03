@@ -5,3 +5,20 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body{
+    padding: unset;
+    margin: unset;
+    box-sizing: border-box;
+    min-height: 100vh;
+    height: 100vh;
+    border: 2px solid red;
+}
+main h1{
+    text-align: center;
+    font-size: 2rem;
+}
+.canvas-container{
+    border:  2px dashed blue;
+    height: 100vh;
+}

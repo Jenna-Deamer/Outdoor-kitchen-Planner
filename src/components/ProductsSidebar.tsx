@@ -1,9 +1,6 @@
-interface ProductSidebarProps {
-    onAddCabinet: () => void;
-    onAddFridge: () => void;
-}
+import React from 'react';
 
-function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
+function ProductSidebar({ onAddCabinet, onAddFridge }) {
     return (
         <aside>
             <h2>Product Sidebar</h2>

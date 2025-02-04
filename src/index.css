@@ -6,17 +6,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body{
-    padding: unset;
-    margin: unset;
-    box-sizing: border-box;
-    min-height: 100vh;
-    height: 100vh;
-    border: 2px solid red;
+body {
+  padding: unset;
+  margin: unset;
+  box-sizing: border-box;
+  min-height: 100vh;
+  height: 100vh;
+  border: 2px solid red;
 }
 
-main{
-    min-height: 100vh;
-    height: 100vh;
-    border: 2px dashed blue;
+main {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh;
+  border: 2px dashed blue;
+}
+
+aside {
+  border: 2px solid green;
+  text-align: center;
+  height: 100%;
 }

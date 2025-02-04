@@ -2,10 +2,10 @@
  * https://r3f.docs.pmnd.rs/getting-started/introduction
  * **/
 import { Canvas } from "@react-three/fiber"; // Auto setups a three.js scene, camera, and renderer
-import { OrbitControls, useGLTF } from "@react-three/drei"; // Allow users to rotate, zoom, and pan the
+import { OrbitControls, useGLTF } from "@react-three/drei"; // orbitcontrols - Allow users to rotate, zoom, and pan the camera
 import ProductSidebar from "./components/ProuductSidebar";
 
-function Model() {
+function Counter() {
     const counter = useGLTF("./src/assets/counters/straightCounter.glb");
     return (
         <primitive object={counter.scene} scale={0.1} position={[1, 0, 0]} />
@@ -22,7 +22,7 @@ function App() {
                 }}
             >
                 <ambientLight intensity={1} /> {/* Soft, even light */}
-                <Model />
+                <Counter />
                 <OrbitControls />
             </Canvas>
         </main>

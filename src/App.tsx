@@ -15,7 +15,7 @@ function Counter() {
 function App() {
     return (
         <main>
-            <ProductSidebar />
+            <ProductSidebar onAddCabinet={() => {}} onAddFridge={() => {}} />
             <Canvas
                 camera={{
                     position: [0, 2.5, 10], // x, y, zs

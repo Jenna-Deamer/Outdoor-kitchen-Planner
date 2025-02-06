@@ -1,17 +1,34 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import ProductSidebar from "./components/ProductsSidebar";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import * as THREE from "three";
+import { Box3, Vector3 } from "three";
 
 function Cabinet({ position, onClick, isSelected }: { position: [number, number, number]; onClick: () => void; isSelected: boolean }) {
     const cabinet = useGLTF("./src/assets/cabinet.glb");
+    const ref = useRef<THREE.Group>(null);
+    const [size, setSize] = useState<[number, number, number]>([1, 1, 1]);
+    const [center, setCenter] = useState<[number, number, number]>([0, 0, 0]);
+
+    useEffect(() => {
+        if (ref.current) {
+            const box = new Box3().setFromObject(ref.current);
+            const dimensions = new Vector3();
+            box.getSize(dimensions);
+            const center = new Vector3();
+            box.getCenter(center);
+            setSize([dimensions.x, dimensions.y, dimensions.z]);
+            setCenter([center.x, center.y, center.z]);
+        }
+    }, []);
 
     return (
-        <group position={position} onClick={onClick}>
+        <group ref={ref} position={position} onClick={onClick}>
             <primitive object={cabinet.scene} scale={0.1} />
             {isSelected && (
-                <mesh>
-                    <boxGeometry args={[1, 1, 1]} />
+                <mesh position={center}>
+                    <boxGeometry args={size} />
                     <meshBasicMaterial color="yellow" wireframe />
                 </mesh>
             )}
@@ -21,20 +38,34 @@ function Cabinet({ position, onClick, isSelected }: { position: [number, number,
 
 function Fridge({ position, onClick, isSelected }: { position: [number, number, number]; onClick: () => void; isSelected: boolean }) {
     const fridge = useGLTF("./src/assets/fridge.glb");
+    const ref = useRef<THREE.Group>(null);
+    const [size, setSize] = useState<[number, number, number]>([1, 1, 1]);
+    const [center, setCenter] = useState<[number, number, number]>([0, 0, 0]);
+
+    useEffect(() => {
+        if (ref.current) {
+            const box = new Box3().setFromObject(ref.current);
+            const dimensions = new Vector3();
+            box.getSize(dimensions);
+            const center = new Vector3();
+            box.getCenter(center);
+            setSize([dimensions.x, dimensions.y, dimensions.z]);
+            setCenter([center.x, center.y, center.z]);
+        }
+    }, []);
 
     return (
-        <group position={position} onClick={onClick}>
+        <group ref={ref} position={position} onClick={onClick}>
             <primitive object={fridge.scene} scale={0.1} />
             {isSelected && (
-                <mesh>
-                    <boxGeometry args={[1, 1, 1]} />
+                <mesh position={center}>
+                    <boxGeometry args={size} />
                     <meshBasicMaterial color="yellow" wireframe />
                 </mesh>
             )}
         </group>
     );
 }
-
 
 function Counter({ children }: { children?: React.ReactNode }) {
     const counter = useGLTF("./src/assets/counters/straightCounter.glb");
@@ -51,15 +82,14 @@ function App() {
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(null);
 
     const handleAddCabinet = () => {
-        setModels([...models, { type: "cabinet", position: [0, 0, 1.2] }]); // Positioned to the left front
+        setModels([...models, { type: "cabinet", position: [0, 0, 0] }]);
     };
 
     const handleAddFridge = () => {
-        setModels([...models, { type: "fridge", position: [0, 0, 1.2] }]); // Positioned to the right front
+        setModels([...models, { type: "fridge", position: [0, 0, 0] }]); 
     };
 
     const handleModelClick = (index: number) => {
-        // set the clicked model as the current selected model
         setSelectedModelIndex(index);
         console.log("Selected model index: ", index);
     };

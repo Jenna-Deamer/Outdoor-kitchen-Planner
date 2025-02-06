@@ -24,10 +24,12 @@ function Fridge({
             box.getSize(dimensions);
             const center = new Vector3();
             box.getCenter(center);
+            // Adjust for the group's position
+            center.sub(new Vector3(...position));
             setSize([dimensions.x, dimensions.y, dimensions.z]);
             setCenter([center.x, center.y, center.z]);
         }
-    }, []);
+    }, [position]);
 
     return (
         <group ref={ref} position={position} onClick={onClick}>

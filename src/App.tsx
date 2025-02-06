@@ -17,11 +17,11 @@ function App() {
     );
 
     const handleAddCabinet = () => {
-        setModels([...models, { type: "cabinet", position: [0, 0, 0] }]);
+        setModels([...models, { type: "cabinet", position: [0, 0.2, 0] }]);
     };
 
     const handleAddFridge = () => {
-        setModels([...models, { type: "fridge", position: [0, 0, 0] }]);
+        setModels([...models, { type: "fridge", position: [0, 0.2, 0] }]);
     };
 
     const handleModelClick = (index: number) => {
@@ -35,7 +35,7 @@ function App() {
                 onAddCabinet={handleAddCabinet}
                 onAddFridge={handleAddFridge}
             />
-            <Canvas camera={{ position: [0, 2.5, 10] }}>
+            <Canvas camera={{ position: [0, 2, 4] }}>
                 <ambientLight intensity={1} />
                 <Counter>
                     {models.map((model, index) => {

@@ -3,15 +3,38 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import ProductSidebar from "./components/ProductsSidebar";
 import { useState } from "react";
 
-function Cabinet({ position }: { position: [number, number, number] }) {
+function Cabinet({ position, onClick, isSelected }: { position: [number, number, number]; onClick: () => void; isSelected: boolean }) {
     const cabinet = useGLTF("./src/assets/cabinet.glb");
-    return <primitive object={cabinet.scene} scale={0.1} position={position} />;
+
+    return (
+        <group position={position} onClick={onClick}>
+            <primitive object={cabinet.scene} scale={0.1} />
+            {isSelected && (
+                <mesh>
+                    <boxGeometry args={[1, 1, 1]} />
+                    <meshBasicMaterial color="yellow" wireframe />
+                </mesh>
+            )}
+        </group>
+    );
 }
 
-function Fridge({ position }: { position: [number, number, number] }) {
+function Fridge({ position, onClick, isSelected }: { position: [number, number, number]; onClick: () => void; isSelected: boolean }) {
     const fridge = useGLTF("./src/assets/fridge.glb");
-    return <primitive object={fridge.scene} scale={0.1} position={position} />;
+
+    return (
+        <group position={position} onClick={onClick}>
+            <primitive object={fridge.scene} scale={0.1} />
+            {isSelected && (
+                <mesh>
+                    <boxGeometry args={[1, 1, 1]} />
+                    <meshBasicMaterial color="yellow" wireframe />
+                </mesh>
+            )}
+        </group>
+    );
 }
+
 
 function Counter({ children }: { children?: React.ReactNode }) {
     const counter = useGLTF("./src/assets/counters/straightCounter.glb");
@@ -25,6 +48,7 @@ function Counter({ children }: { children?: React.ReactNode }) {
 
 function App() {
     const [models, setModels] = useState<{ type: string; position: [number, number, number] }[]>([]);
+    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(null);
 
     const handleAddCabinet = () => {
         setModels([...models, { type: "cabinet", position: [0, 0, 1.2] }]); // Positioned to the left front
@@ -34,6 +58,12 @@ function App() {
         setModels([...models, { type: "fridge", position: [0, 0, 1.2] }]); // Positioned to the right front
     };
 
+    const handleModelClick = (index: number) => {
+        // set the clicked model as the current selected model
+        setSelectedModelIndex(index);
+        console.log("Selected model index: ", index);
+    };
+
     return (
         <main>
             <ProductSidebar onAddCabinet={handleAddCabinet} onAddFridge={handleAddFridge} />
@@ -41,8 +71,27 @@ function App() {
                 <ambientLight intensity={1} />
                 <Counter>
                     {models.map((model, index) => {
-                        if (model.type === "cabinet") return <Cabinet key={index} position={model.position} />;
-                        if (model.type === "fridge") return <Fridge key={index} position={model.position} />;
+                        const isSelected = index === selectedModelIndex;
+                        if (model.type === "cabinet") {
+                            return (
+                                <Cabinet
+                                    key={index}
+                                    position={model.position}
+                                    onClick={() => handleModelClick(index)}
+                                    isSelected={isSelected}
+                                />
+                            );
+                        }
+                        if (model.type === "fridge") {
+                            return (
+                                <Fridge
+                                    key={index}
+                                    position={model.position}
+                                    onClick={() => handleModelClick(index)}
+                                    isSelected={isSelected}
+                                />
+                            );
+                        }
                         return null;
                     })}
                 </Counter>

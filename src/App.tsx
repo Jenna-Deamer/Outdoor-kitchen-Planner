@@ -31,7 +31,6 @@ function App() {
 
     const handleMoveModel = useCallback(
         (direction: "left" | "right") => {
-            console.log("Moving model to the", direction);
             if (selectedModelIndex !== null) {
                 // Create a new array with the updated model
                 const updatedModels = models.map((model, index) => {
@@ -53,7 +52,6 @@ function App() {
 
                 // Update the models state with the new array
                 setModels(updatedModels);
-                console.log("Models state after update: ", updatedModels);
             }
         },
         [selectedModelIndex, models]

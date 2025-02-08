@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { Box3, Vector3 } from "three";
 
@@ -12,7 +12,9 @@ function Fridge({
     onClick: () => void;
     isSelected: boolean;
 }) {
-    const fridge = useGLTF("./src/assets/fridge.glb");
+    const { scene } = useGLTF("./src/assets/fridge.glb");
+    // Creates a memoized clone of the scene UseMemo ensures only clones when dependcy changes
+    const clonedScene = useMemo(() => scene.clone(), [scene]); // without cloning the scene would create a new model and dispose of the old one (Preventing multiple of the same model)
     const ref = useRef<THREE.Group>(null);
     const [size, setSize] = useState<[number, number, number]>([1, 1, 1]);
     const [center, setCenter] = useState<[number, number, number]>([0, 0, 0]);
@@ -33,7 +35,7 @@ function Fridge({
 
     return (
         <group ref={ref} position={position} onClick={onClick}>
-            <primitive object={fridge.scene} scale={0.1} />
+            <primitive object={clonedScene} scale={0.1} />
             {isSelected && (
                 <mesh position={center}>
                     <boxGeometry args={size} />

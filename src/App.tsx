@@ -1,9 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import ProductSidebar from "./components/ProductsSidebar";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-// models
+// Models
 import Counter from "./components/models/Counter";
 import Cabinet from "./components/models/Cabinet";
 import Fridge from "./components/models/Fridge";
@@ -29,6 +29,53 @@ function App() {
         console.log("Selected model index: ", index);
     };
 
+    const handleMoveModel = useCallback(
+        (direction: "left" | "right") => {
+            console.log("Moving model to the", direction);
+            if (selectedModelIndex !== null) {
+                // Create a new array with the updated model
+                const updatedModels = models.map((model, index) => {
+                    if (index === selectedModelIndex) {
+                        // Create a new object for the updated model
+                        const newPosition: [number, number, number] = [
+                            ...model.position,
+                        ] as [number, number, number]; // Copy the position array so react detects the change and rerenders instread of mutating the original array
+                        const moveDistance = 0.1; // How much the unit moves by each click
+                        if (direction === "left") {
+                            newPosition[0] -= moveDistance;
+                        } else if (direction === "right") {
+                            newPosition[0] += moveDistance;
+                        }
+                        return { ...model, position: newPosition }; // create new object with updated position
+                    }
+                    return model;
+                });
+
+                // Update the models state with the new array
+                setModels(updatedModels);
+                console.log("Models state after update: ", updatedModels);
+            }
+        },
+        [selectedModelIndex, models]
+    );
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Check what key is pressed
+            if (e.key === "ArrowLeft") {
+                handleMoveModel("left");
+            } else if (e.key === "ArrowRight") {
+                handleMoveModel("right");
+            }
+        };
+        // Add event listener
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            // Cleanup function to remove the event listener when the component is unmounted or dependencies change
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [selectedModelIndex, models, handleMoveModel]); // Rerun effect whenever selectedModelIndex or models changes
+
     return (
         <main>
             <ProductSidebar
@@ -44,7 +91,7 @@ function App() {
                             return (
                                 <Cabinet
                                     key={index}
-                                    position={model.position}
+                                    position={model.position} // New position will trigger re-render
                                     onClick={() => handleModelClick(index)}
                                     isSelected={isSelected}
                                 />
@@ -54,7 +101,7 @@ function App() {
                             return (
                                 <Fridge
                                     key={index}
-                                    position={model.position}
+                                    position={model.position} // New position will trigger re-render
                                     onClick={() => handleModelClick(index)}
                                     isSelected={isSelected}
                                 />

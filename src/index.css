@@ -1,41 +1,81 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  padding: unset;
-  margin: unset;
-  box-sizing: border-box;
-  min-height: 100vh;
-  height: 100vh;
-  border: 2px solid red;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 main {
-  display: flex;
-  min-height: 100vh;
-  height: 100vh;
-  border: 2px dashed blue;
+    display: flex;
+    height: 100vh;
 }
-
 aside {
-  border: 2px solid green;
-  text-align: center;
-  height: 100%;
+    width: 200px;
+    background-color: #f8f9fa;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+aside h2 {
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 2rem;
+}
+.product-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.product-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    background-color: #fff;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.product-item h4 {
+    margin-bottom: 0.3rem;
+    color: #495057;
+    font-weight: 500;
+}
+.product-item img {
+    border-radius: 4px;
 }
 
-aside div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
+.product-item button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4263eb;
+    color: #fff;
+    border-radius: 50%;
+    padding: 0.6rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 
-aside div button {
-  width: 100px;
+.product-item button:hover {
+    background-color: #364fc7;
+    transform: scale(1.1);
+}
+
+.product-item button:active {
+    transform: scale(0.95);
+}
+
+.canvas {
+    flex: 1;
+    border: 2px solid purple;
 }

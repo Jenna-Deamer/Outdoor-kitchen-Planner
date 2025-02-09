@@ -1,3 +1,4 @@
+import { PlusIcon } from "../assets/icons/plus.tsx";
 interface ProductSidebarProps {
     onAddCabinet: () => void;
     onAddFridge: () => void;
@@ -6,10 +7,26 @@ interface ProductSidebarProps {
 function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
     return (
         <aside>
-            <h2>Product Sidebar</h2>
-            <div>
-                <button onClick={onAddCabinet}>Add Cabinet</button>
-                <button onClick={onAddFridge}>Add Fridge</button>
+            <h2>Models</h2>
+            <div className="product-list">
+                <div className="product-item">
+                    <div className="product-info">
+                        <h4>Cabinet</h4>
+                        <img src="https://placehold.co/80x80" alt="Cabinet" />
+                    </div>
+                    <button onClick={onAddCabinet}>
+                        <PlusIcon />
+                    </button>
+                </div>
+                <div className="product-item">
+                    <div className="product-info">
+                        <h4>Fridge</h4>
+                        <img src="https://placehold.co/80x80" alt="Fridge" />
+                    </div>
+                    <button onClick={onAddFridge}>
+                        <PlusIcon />
+                    </button>
+                </div>
             </div>
         </aside>
     );

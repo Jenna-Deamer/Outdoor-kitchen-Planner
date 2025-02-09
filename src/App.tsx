@@ -80,7 +80,7 @@ function App() {
                 onAddCabinet={handleAddCabinet}
                 onAddFridge={handleAddFridge}
             />
-            <Canvas camera={{ position: [0, 2, 4] }}>
+            <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <ambientLight intensity={1} />
                 <Counter>
                     {models.map((model, index) => {

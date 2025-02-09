@@ -4,6 +4,7 @@ import ProductSidebar from "./components/ProductsSidebar";
 import { useState, useEffect, useCallback } from "react";
 
 // Models
+import Ground from "./components/models/Ground";
 import Counter from "./components/models/Counter";
 import Cabinet from "./components/models/Cabinet";
 import Fridge from "./components/models/Fridge";
@@ -82,6 +83,7 @@ function App() {
             />
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <ambientLight intensity={1} />
+                <Ground />
                 <Counter>
                     {models.map((model, index) => {
                         const isSelected = index === selectedModelIndex;

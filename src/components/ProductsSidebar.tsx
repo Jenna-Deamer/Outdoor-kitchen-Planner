@@ -11,7 +11,7 @@ function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
             <div className="product-list">
                 <div className="product-item">
                     <div className="product-info">
-                        <h4>Cabinet</h4>
+                        <p>Cabinet</p>
                         <img src="https://placehold.co/80x80" alt="Cabinet" />
                     </div>
                     <button onClick={onAddCabinet}>
@@ -20,7 +20,7 @@ function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
                 </div>
                 <div className="product-item">
                     <div className="product-info">
-                        <h4>Fridge</h4>
+                        <p>Fridge</p>
                         <img src="https://placehold.co/80x80" alt="Fridge" />
                     </div>
                     <button onClick={onAddFridge}>

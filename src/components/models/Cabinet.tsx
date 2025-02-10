@@ -2,7 +2,7 @@ import { useGLTF } from "@react-three/drei";
 import { useState, useRef, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { Box3, Vector3 } from "three";
-
+import cabinetModel from "/src/assets/cabinet.glb";
 function Cabinet({
     position,
     onClick,
@@ -12,7 +12,7 @@ function Cabinet({
     onClick: () => void;
     isSelected: boolean;
 }) {
-    const { scene } = useGLTF("/src/assets/cabinet.glb");
+    const { scene } = useGLTF(cabinetModel);
     // Creates a memoized clone of the scene UseMemo ensures only clones when dependcy changes
     const clonedScene = useMemo(() => scene.clone(), [scene]); // without cloning the scene would create a new model and dispose of the old one (Preventing multiple of the same model)
     const ref = useRef<THREE.Group>(null); // Reference to the 3D object group

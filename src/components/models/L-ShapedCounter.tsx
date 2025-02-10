@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
-import counterModel from "/src/assets/counters/straightCounter.glb";
+import counterModel from "/src/assets/counters/L-shapedCounter.glb";
 
-function Counter({ children }: { children?: React.ReactNode }) {
+function LShapedCounter({ children }: { children?: React.ReactNode }) {
     const counter = useGLTF(counterModel);
     return (
         <group position={[0, 0, 0]}>
@@ -11,4 +11,4 @@ function Counter({ children }: { children?: React.ReactNode }) {
     );
 }
 
-export default Counter;
+export default LShapedCounter;

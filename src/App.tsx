@@ -12,10 +12,10 @@ import LShapedCounter from "./components/models/L-ShapedCounter";
 import Cabinet from "./components/models/Cabinet";
 import Fridge from "./components/models/Fridge";
 
+type Model = { type: string; position: [number, number, number] };
+
 function App() {
-    const [models, setModels] = useState<
-        { type: string; position: [number, number, number] }[]
-    >([]);
+    const [models, setModels] = useState<Model[]>([]);
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(null);
     const [selectedCounterType, setSelectedCounterType] = useState<string | null>(null);
 

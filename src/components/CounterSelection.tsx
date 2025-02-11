@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import "../styles/CounterSelection.css";
 
 interface CounterSelectionProps {
     onSelectCounter: (counterType: string) => void;
@@ -14,9 +15,10 @@ function CounterSelection({ onSelectCounter }: CounterSelectionProps) {
     }
 
     return (
-        <div>
+        <div className='counter-selection-container'>
             <h1>Select your Counter Type</h1>
 
+<div className='counter-buttons'>
             <article>
                 <h2>Straight Counter</h2>
                 <button onClick={() => handleSelectCounter('straight')}>Select</button>
@@ -32,6 +34,7 @@ function CounterSelection({ onSelectCounter }: CounterSelectionProps) {
                     <h2>You have selected: {selectedCounter}</h2>
                 </div>
             )}
+        </div>
         </div>
     );
 }

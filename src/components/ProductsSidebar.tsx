@@ -1,4 +1,6 @@
 import { PlusIcon } from "../assets/icons/plus.tsx";
+import "../styles/sidebar.css";
+
 interface ProductSidebarProps {
     onAddCabinet: () => void;
     onAddFridge: () => void;

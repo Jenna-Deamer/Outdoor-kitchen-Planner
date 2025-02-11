@@ -1,4 +1,4 @@
-import "../styles/CounterSelection.css";
+import "../styles/counterSelection.css";
 
 interface CounterSelectionProps {
     onSelectCounter: (counterType: string) => void;

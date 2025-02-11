@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 // Components
 import ProductSidebar from "./components/ProductsSidebar";
 import CounterSelection from "./components/CounterSelection";
+import SkyBox from "./components/SkyBox";
 // Models
 import Ground from "./components/models/Ground";
 import StraightCounter from "./components/models/StraightCounter";
@@ -64,6 +65,8 @@ function App() {
         [selectedModelIndex, models]
     );
 
+ 
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             // Check what key is pressed
@@ -86,6 +89,7 @@ function App() {
         return <CounterSelection onSelectCounter={handleSelectCounter} />;
     }
 
+
     return (
         <main>
             <ProductSidebar
@@ -94,6 +98,7 @@ function App() {
             />
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <ambientLight intensity={1} />
+                <SkyBox/>
                 <Ground />
                 {selectedCounterType === 'straight' ? (
                     <StraightCounter>

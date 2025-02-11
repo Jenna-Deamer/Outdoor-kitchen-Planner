@@ -1,30 +1,42 @@
-.counter-selection-container{
+.counter-selection-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-  
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--action-color));
+    color: var(--white);
 }
-.counter-selection-container article{
-    border: 2px solid #333;
+
+.counter-selection-container article {
     padding: 1rem;
     border-radius: 4px;
 }
-.counter-buttons{
+
+.counter-buttons {
     display: flex;
     margin-top: 1rem;
     gap: 2rem;
     text-align: center;
 }
 
-.counter-buttons button{
+.counter-buttons button {
     padding: 0.5rem 1rem;
     font-size: var(--font-size-lg);
+    background-color: var(--action-color);
+    color: var(--white);
     border: none;
     outline: none;
     margin-top: .5rem;
     width: 150px;
     border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.counter-buttons button:hover {
+    background-color: var(--hover-color);
+}
 
+.counter-buttons button:active {
+    transform: scale(0.95);
 }

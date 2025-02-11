@@ -7,6 +7,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    /* Colors */
+   --primary-color: #09122C;
+    --secondary-color: #152045;
+    --action-color:  #872341;
+    --hover-color: #BE3144;
+    --white: #fff;
+    --black: #1d1d1d;
+
     /* Font Sizes */
     --font-size-xs: 0.75rem; /* 12px */
     --font-size-sm: 0.875rem; /* 14px */
@@ -14,7 +22,7 @@
     --font-size-lg: 1.125rem; /* 18px */
     --font-size-xl: 1.25rem; /* 20px */
     --font-size-2xl: 1.5rem; /* 24px */
-    --font-size-3xl: 1.875rem; /* 30px */
+    --font-size-3xl: 2rem; /* 30px */
 }
 
 * {
@@ -26,7 +34,7 @@
 body {
     font-size: var(--font-size-base);
     line-height: 1.5;
-    color: #333333;
+    color: var(--white);
 }
 
 h1 {
@@ -62,5 +70,4 @@ main {
 
 .canvas {
     flex: 1;
-    border: 2px solid purple;
 }

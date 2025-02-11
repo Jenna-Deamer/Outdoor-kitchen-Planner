@@ -12,7 +12,7 @@ function CounterSelection({ onSelectCounter }: CounterSelectionProps) {
 
     return (
         <div className='counter-selection-container'>
-            <h1>Select your Counter Type</h1>
+            <h1>Select a Counter Type</h1>
 
             <div className='counter-buttons'>
                 <article>

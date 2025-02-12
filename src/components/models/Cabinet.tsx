@@ -23,10 +23,10 @@ function Cabinet({
     useEffect(() => {
         if (ref.current) {
             const box = new Box3().setFromObject(ref.current); // create box that encapsulates the object
-            // calc demensions of bounding box
+            // calc dimensions of bounding box
             const dimensions = new Vector3();
             box.getSize(dimensions);
-            // calc center of bounding box
+            // calc center of bounding box (keeps bounding box aligned with model as it moves)
             const center = new Vector3();
             box.getCenter(center);
             // Adjust for the group's position

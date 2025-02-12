@@ -9,7 +9,7 @@ interface ProductSidebarProps {
 function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
     return (
         <aside>
-            <h2>Models</h2>
+            <h2>Add Models</h2>
             <div className="product-list">
                 <div className="product-item">
                     <div className="product-info">
@@ -30,6 +30,10 @@ function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
                     </button>
                 </div>
             </div>
+            <div className="sidebar-footer">
+            <small>Click on a model to select, then use the arrow keys to&nbsp;move!</small>
+            </div>
+          
         </aside>
     );
 }

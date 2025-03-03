@@ -1,4 +1,4 @@
-import { PlusIcon } from "../assets/icons/plus.tsx";
+import { PlusIcon } from "../assets/icons/plus";
 import "../styles/productSidebar.css";
 
 interface ProductSidebarProps {

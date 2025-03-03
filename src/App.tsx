@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 
 // Components
 import ProductSidebar from "./components/ProductsSidebar";
-import SceneObject from "./components/SceneObjects";
 import CounterSelection from "./components/CounterSelection";
 import SkyBox from "./components/SkyBox";
 // Models
@@ -94,13 +93,10 @@ function App() {
 
     return (
         <main>
-            <section id="sidebar">
-                <ProductSidebar
-                    onAddCabinet={handleAddCabinet}
-                    onAddFridge={handleAddFridge}
-                />
-                <SceneObject />
-            </section>
+            <ProductSidebar
+                onAddCabinet={handleAddCabinet}
+                onAddFridge={handleAddFridge}
+            />
 
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <ambientLight intensity={1} />

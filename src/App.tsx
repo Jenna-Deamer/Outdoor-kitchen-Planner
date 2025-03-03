@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 
 // Components
 import ProductSidebar from "./components/ProductsSidebar";
+import SceneObject from "./components/SceneObjects";
 import CounterSelection from "./components/CounterSelection";
 import SkyBox from "./components/SkyBox";
 // Models
@@ -17,12 +18,16 @@ type Model = { type: string; position: [number, number, number] };
 
 function App() {
     const [models, setModels] = useState<Model[]>([]);
-    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(null);
-    const [selectedCounterType, setSelectedCounterType] = useState<string | null>(null);
+    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
+        null
+    );
+    const [selectedCounterType, setSelectedCounterType] = useState<
+        string | null
+    >(null);
 
     const handleSelectCounter = (counterType: string) => {
         setSelectedCounterType(counterType);
-    }
+    };
 
     const handleAddCabinet = () => {
         setModels([...models, { type: "cabinet", position: [0, 0.2, 0] }]);
@@ -65,8 +70,6 @@ function App() {
         [selectedModelIndex, models]
     );
 
- 
-
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             // Check what key is pressed
@@ -89,18 +92,21 @@ function App() {
         return <CounterSelection onSelectCounter={handleSelectCounter} />;
     }
 
-
     return (
         <main>
-            <ProductSidebar
-                onAddCabinet={handleAddCabinet}
-                onAddFridge={handleAddFridge}
-            />
+            <section id="sidebar">
+                <ProductSidebar
+                    onAddCabinet={handleAddCabinet}
+                    onAddFridge={handleAddFridge}
+                />
+                <SceneObject />
+            </section>
+
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <ambientLight intensity={1} />
-                <SkyBox/>
+                <SkyBox />
                 <Ground />
-                {selectedCounterType === 'straight' ? (
+                {selectedCounterType === "straight" ? (
                     <StraightCounter>
                         {models.map((model, index) => {
                             const isSelected = index === selectedModelIndex;

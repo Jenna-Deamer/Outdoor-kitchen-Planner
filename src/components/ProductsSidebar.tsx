@@ -1,5 +1,5 @@
 import { PlusIcon } from "../assets/icons/plus.tsx";
-import "../styles/sidebar.css";
+import "../styles/productSidebar.css";
 
 interface ProductSidebarProps {
     onAddCabinet: () => void;
@@ -31,9 +31,11 @@ function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
                 </div>
             </div>
             <div className="sidebar-footer">
-            <small>Click on a model to select, then use the arrow keys to&nbsp;move!</small>
+                <small>
+                    Click on a model to select, then use the arrow keys
+                    to&nbsp;move!
+                </small>
             </div>
-          
         </aside>
     );
 }

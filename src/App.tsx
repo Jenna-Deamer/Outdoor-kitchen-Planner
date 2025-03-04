@@ -48,6 +48,8 @@ function App() {
         }
         // Filter out the model at the selected index and update the models state
         setModels(models.filter((_, i) => i !== index));
+        // Reset selectedModelIndex
+        setSelectedModelIndex(null);
     };
 
     const handleMoveModel = useCallback(

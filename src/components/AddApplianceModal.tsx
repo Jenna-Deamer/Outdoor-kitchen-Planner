@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/addApplianceModal.css";
+import "../styles/modal.css";
 
 interface AddApplianceModalProps {
     isOpen: boolean;

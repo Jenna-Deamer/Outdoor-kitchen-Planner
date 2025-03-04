@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AddApplianceModal from "./AddApplianceModal";
 import "../styles/modelSidebar.css";
-import "../styles/addApplianceModal.css";
+import "../styles/modal.css";
 import PlusIcon from "../assets/icons/plus";
 import { model as modelData } from "../data/models";
 

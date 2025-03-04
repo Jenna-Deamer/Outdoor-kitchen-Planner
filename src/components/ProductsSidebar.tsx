@@ -1,4 +1,3 @@
-import { PlusIcon } from "../assets/icons/plus";
 import "../styles/productSidebar.css";
 
 interface ProductSidebarProps {
@@ -9,26 +8,11 @@ interface ProductSidebarProps {
 function ProductSidebar({ onAddCabinet, onAddFridge }: ProductSidebarProps) {
     return (
         <aside>
-            <h2>Add Models</h2>
-            <div className="product-list">
-                <div className="product-item">
-                    <div className="product-info">
-                        <p>Cabinet</p>
-                        <img src="https://placehold.co/80x80" alt="Cabinet" />
-                    </div>
-                    <button onClick={onAddCabinet}>
-                        <PlusIcon />
-                    </button>
-                </div>
-                <div className="product-item">
-                    <div className="product-info">
-                        <p>Fridge</p>
-                        <img src="https://placehold.co/80x80" alt="Fridge" />
-                    </div>
-                    <button onClick={onAddFridge}>
-                        <PlusIcon />
-                    </button>
-                </div>
+        <div id="sidebar-header">
+                <h2>Design Tools</h2>
+                <button className="add-appliance-btn" onClick={() => {}}>
+                    Add Appliance
+                </button>
             </div>
             <div className="sidebar-footer">
                 <small>

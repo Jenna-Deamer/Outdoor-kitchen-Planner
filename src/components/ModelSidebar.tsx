@@ -1,4 +1,5 @@
-import { Key } from "react";
+import { Key, useState } from "react";
+import AddApplianceModal from "../components/AddApplianceModal";
 import "../styles/modelSidebar.css";
 
 interface ModelSidebarProps {
@@ -8,11 +9,20 @@ interface ModelSidebarProps {
 }
 
 function ProductSidebar({ onAddCabinet, onAddFridge, models }: ModelSidebarProps) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    const handleOpenModal = () =>{
+        setIsModalOpen(true);
+    }
+
+    const handleCloseModal = () =>{
+        setIsModalOpen(false);
+    }
     return (
         <aside>
-        <div id="sidebar-header">
+            <div id="sidebar-header">
                 <h2>Design Tools</h2>
-                <button id="add-appliance-btn" onClick={() => {}}>
+                <button id="add-appliance-btn" onClick={handleOpenModal}>
                     Add Appliance
                 </button>
             </div>
@@ -31,6 +41,11 @@ function ProductSidebar({ onAddCabinet, onAddFridge, models }: ModelSidebarProps
                     to&nbsp;move!
                 </small>
             </div>
+            <AddApplianceModal isOpen={isModalOpen} onClose={handleCloseModal}>
+                <h2>Select an Appliance</h2>
+                <button onClick={onAddCabinet}>Add Cabinet</button>
+                <button onClick={onAddFridge}>Add Fridge</button>
+            </AddApplianceModal>
         </aside>
     );
 }

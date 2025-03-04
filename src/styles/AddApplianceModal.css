@@ -17,3 +17,64 @@
     padding: 2rem;
     border-radius: 8px;
 }
+
+#modal-close-btn {
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.modal-button-container {
+    display: flex;
+    align-items: center;
+    padding-right: 1.5rem;
+}
+
+/*Models on Modal*/
+.appliance-selection-card {
+    background-color: var(--secondary-color);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    height: 150px;
+}
+
+.appliance-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 0;
+}
+
+.appliance-selection-card img {
+    height: 100%;
+    object-fit: cover;
+    width: 130px;
+}
+
+.appliance-details p {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.appliance-details small {
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    word-wrap: break-word;
+    max-width: 300px;
+}
+
+.modal-button-container button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}

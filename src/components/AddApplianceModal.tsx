@@ -19,7 +19,7 @@ const AddApplianceModal: React.FC<AddApplianceModalProps> = ({
     return (
         <article id="modal-container">
             <div id="modal-content">
-                <button id="modal-close" onClick={onClose}>
+                <button id="modal-close-btn" onClick={onClose}>
                     &times;
                 </button>
                 {children}

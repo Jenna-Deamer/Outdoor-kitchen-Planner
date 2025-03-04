@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/AddApplianceModal.css";
+import "../styles/addApplianceModal.css";
 
 interface AddApplianceModalProps {
     isOpen: boolean;
@@ -7,17 +7,25 @@ interface AddApplianceModalProps {
     children: React.ReactNode;
 }
 
-const AddApplianceModal: React.FC<AddApplianceModalProps> = ({ isOpen, onClose, children }) => {
-    if (!isOpen) {return null;}
+const AddApplianceModal: React.FC<AddApplianceModalProps> = ({
+    isOpen,
+    onClose,
+    children,
+}) => {
+    if (!isOpen) {
+        return null;
+    }
 
-    return(
+    return (
         <article id="modal-container">
-           <div className="modal-content">
-                <button id="modal-close" onClick={onClose}>&times;</button>
+            <div id="modal-content">
+                <button id="modal-close" onClick={onClose}>
+                    &times;
+                </button>
                 {children}
             </div>
         </article>
-    )
+    );
 };
 
 export default AddApplianceModal;

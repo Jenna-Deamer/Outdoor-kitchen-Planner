@@ -8,16 +8,20 @@ interface ModelSidebarProps {
     models: { type: string; position: [number, number, number] }[];
 }
 
-function ProductSidebar({ onAddCabinet, onAddFridge, models }: ModelSidebarProps) {
+function ProductSidebar({
+    onAddCabinet,
+    onAddFridge,
+    models,
+}: ModelSidebarProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
-    const handleOpenModal = () =>{
-        setIsModalOpen(true);
-    }
 
-    const handleCloseModal = () =>{
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
         setIsModalOpen(false);
-    }
+    };
     return (
         <aside>
             <div id="sidebar-header">
@@ -26,14 +30,25 @@ function ProductSidebar({ onAddCabinet, onAddFridge, models }: ModelSidebarProps
                     Add Appliance
                 </button>
             </div>
-            <div id="sidebar-model">
-                {models.map((model: { type: string; }, index: Key | null | undefined) => (
-                    <div key={index} className="model-control-card">
-                        <h3>{model.type.charAt(0).toUpperCase() + model.type.slice(1)}</h3> {/* Capitalize first letter */}
-                        <button>Select</button>
-                        <button>Delete</button>
-                    </div>
-                ))}
+            <div id="sidebar-model-list">
+                {models.map(
+                    (
+                        model: { type: string },
+                        index: Key | null | undefined
+                    ) => (
+                        <div key={index} className="model-control-card">
+                            <h3>
+                                {model.type.charAt(0).toUpperCase() +
+                                    model.type.slice(1)}
+                            </h3>
+                            <div className="model-control-buttons">
+                                {/* Capitalize first letter */}
+                                <button>Select</button>
+                                <button>Delete</button>
+                            </div>
+                        </div>
+                    )
+                )}
             </div>
             <div id="sidebar-footer">
                 <small>
@@ -43,8 +58,22 @@ function ProductSidebar({ onAddCabinet, onAddFridge, models }: ModelSidebarProps
             </div>
             <AddApplianceModal isOpen={isModalOpen} onClose={handleCloseModal}>
                 <h2>Select an Appliance</h2>
-                <button onClick={onAddCabinet}>Add Cabinet</button>
-                <button onClick={onAddFridge}>Add Fridge</button>
+                <button
+                    onClick={() => {
+                        onAddCabinet();
+                        handleCloseModal();
+                    }}
+                >
+                    Add Cabinet
+                </button>
+                <button
+                    onClick={() => {
+                        onAddFridge();
+                        handleCloseModal();
+                    }}
+                >
+                    Add Fridge
+                </button>
             </AddApplianceModal>
         </aside>
     );

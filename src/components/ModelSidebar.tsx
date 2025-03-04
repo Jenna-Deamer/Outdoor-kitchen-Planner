@@ -3,6 +3,7 @@ import AddApplianceModal from "../components/AddApplianceModal";
 import "../styles/modelSidebar.css";
 import "../styles/addApplianceModal.css";
 import PlusIcon from "../assets/icons/plus.tsx";
+import { model as modelData } from "../data/models";
 
 interface ModelSidebarProps {
     onAddCabinet: () => void;
@@ -55,44 +56,34 @@ function ModelSidebar({
             </div>
             <AddApplianceModal isOpen={isModalOpen} onClose={handleCloseModal}>
                 <h2>Select an Appliance</h2>
-                {/* Cabinet Card */}
-                <div className="appliance-selection-card">
-                    <img src="https://placehold.co/100x100" alt="Cabinet" />
-                    <div className="appliance-details">
-                        <p>Cabinet</p>
-                        <small>36W x 24H x 24D</small>
-                        <small>Standard 36-inch cabinet with two doors.</small>
+                {modelData.map((item) => (
+                    <div key={item.id} className="appliance-selection-card">
+                        <img src={item.imagePath} alt={item.name} />
+                        <div className="appliance-details">
+                            <p>{item.name}</p>
+                            <small>
+                                {item.dimensions.width}W x{" "}
+                                {item.dimensions.height}H x{" "}
+                                {item.dimensions.depth}D
+                            </small>
+                            <small>{item.description}</small>
+                        </div>
+                        <div className="modal-button-container">
+                            <button
+                                onClick={() => {
+                                    if (item.type === "cabinet") {
+                                        onAddCabinet();
+                                    } else {
+                                        onAddFridge();
+                                    }
+                                    handleCloseModal();
+                                }}
+                            >
+                                <PlusIcon />
+                            </button>
+                        </div>
                     </div>
-                    <div className="modal-button-container">
-                        <button
-                            onClick={() => {
-                                onAddCabinet();
-                                handleCloseModal();
-                            }}
-                        >
-                            <PlusIcon />
-                        </button>
-                    </div>
-                </div>
-                {/* Fridge Card */}
-                <div className="appliance-selection-card">
-                    <img src="https://placehold.co/100x100" alt="Fridge" />
-                    <div className="appliance-details">
-                        <p>Fridge</p>
-                        <small>30W x 70H x 30D</small>
-                        <small>Stainless steel outdoor fridge</small>
-                    </div>
-                    <div className="modal-button-container">
-                        <button
-                            onClick={() => {
-                                onAddFridge();
-                                handleCloseModal();
-                            }}
-                        >
-                            <PlusIcon />
-                        </button>
-                    </div>
-                </div>
+                ))}
             </AddApplianceModal>
         </aside>
     );

@@ -18,7 +18,7 @@ aside {
     align-items: center; 
 }
 
-.add-appliance-btn {
+#add-appliance-btn {
     width: 120px;
     padding: 0.5rem 0.75rem;
     background-color: var(--action-color);
@@ -30,11 +30,11 @@ aside {
     font-weight: 600;
 }
 
-.add-appliance-btn:hover {
+#add-appliance-btn:hover {
     background-color: var(--hover-color);
 }
 
-.product-list {
+#product-list {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -43,13 +43,13 @@ aside {
 }
 
 
-.sidebar-footer {
+#sidebar-footer {
     text-align: center;
     margin-top: auto; /*Push footer to the bottom*/
 
 }
 
-.sidebar-footer small {
+#sidebar-footer small {
     font-size: var(--font-size-xs);
     font-style: italic;
 }

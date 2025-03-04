@@ -3,7 +3,7 @@ import { OrbitControls } from "@react-three/drei";
 import { useState, useEffect, useCallback } from "react";
 
 // Components
-import ProductSidebar from "./components/ProductsSidebar";
+import ModelSidebar from "./components/ModelSidebar";
 import CounterSelection from "./components/CounterSelection";
 import SkyBox from "./components/SkyBox";
 // Models
@@ -93,9 +93,10 @@ function App() {
 
     return (
         <main>
-            <ProductSidebar
+            <ModelSidebar
                 onAddCabinet={handleAddCabinet}
                 onAddFridge={handleAddFridge}
+                models={models}
             />
 
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">

@@ -28,8 +28,7 @@
     /* 20px */
     --font-size-2xl: 1.5rem;
     /* 24px */
-    --font-size-3xl: 2rem;
-    /* 30px */
+    --font-size-3xl: 1.875rem;
 }
 
 * {
@@ -64,6 +63,22 @@ h3 {
 
 small {
     font-size: var(--font-size-sm);
+}
+
+button {
+    width: 100px;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--action-color);
+    color: var(--white);
+    border: unset;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+}
+
+button:hover {
+    background-color: var(--hover-color);
 }
 
 .text-xs {

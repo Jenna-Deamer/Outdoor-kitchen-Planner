@@ -41,6 +41,15 @@ function App() {
         console.log("Selected model index: ", index);
     };
 
+    const handleDeleteModel = (index: number) => {
+        // Confirm deletion
+        if (!window.confirm("Are you sure you want to delete this model?")) {
+            return;
+        }
+        // Filter out the model at the selected index and update the models state
+        setModels(models.filter((_, i) => i !== index));
+    };
+
     const handleMoveModel = useCallback(
         (direction: "left" | "right") => {
             if (selectedModelIndex !== null) {
@@ -97,6 +106,8 @@ function App() {
                 onAddCabinet={handleAddCabinet}
                 onAddFridge={handleAddFridge}
                 models={models}
+                onSelectModel={handleModelClick}
+                onDeleteModel={handleDeleteModel}
             />
 
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">

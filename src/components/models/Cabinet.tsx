@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { Box3, Vector3 } from "three";
 import cabinetModel from "/src/assets/cabinet.glb";
+
 function Cabinet({
     position,
     onClick,
@@ -13,29 +14,23 @@ function Cabinet({
     isSelected: boolean;
 }) {
     const { scene } = useGLTF(cabinetModel);
-    // Creates a memoized clone of the scene UseMemo ensures only clones when dependcy changes
-    const clonedScene = useMemo(() => scene.clone(), [scene]); // without cloning the scene would create a new model and dispose of the old one (Preventing multiple of the same model)
-    const ref = useRef<THREE.Group>(null); // Reference to the 3D object group
-    const [size, setSize] = useState<[number, number, number]>([1, 1, 1]); // Store object dimensions
-    const [center, setCenter] = useState<[number, number, number]>([0, 0, 0]); // Store object center point
+    const clonedScene = useMemo(() => scene.clone(), [scene]);
+    const ref = useRef<THREE.Group>(null);
+    const [size, setSize] = useState<[number, number, number]>([1, 1, 1]);
+    const [center, setCenter] = useState<[number, number, number]>([0, 0, 0]);
 
-    // calculate bounding box and center of the 3D model
     useEffect(() => {
         if (ref.current) {
-            const box = new Box3().setFromObject(ref.current); // create box that encapsulates the object
-            // calc dimensions of bounding box
+            const box = new Box3().setFromObject(ref.current);
             const dimensions = new Vector3();
             box.getSize(dimensions);
-            // calc center of bounding box (keeps bounding box aligned with model as it moves)
             const center = new Vector3();
             box.getCenter(center);
-            // Adjust for the group's position
             center.sub(new Vector3(...position));
-            // Update state with calculated dimensions and center
             setSize([dimensions.x, dimensions.y, dimensions.z]);
             setCenter([center.x, center.y, center.z]);
         }
-    }, [position]);
+    }, [position, scene]);
 
     return (
         <group ref={ref} position={position} onClick={onClick}>

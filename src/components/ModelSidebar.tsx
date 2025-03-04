@@ -9,12 +9,16 @@ interface ModelSidebarProps {
     onAddCabinet: () => void;
     onAddFridge: () => void;
     models: { type: string; position: [number, number, number] }[];
+    onSelectModel: (index: number) => void;
+    onDeleteModel: (index: number) => void;
 }
 
 function ModelSidebar({
     onAddCabinet,
     onAddFridge,
     models,
+    onSelectModel,
+    onDeleteModel
 }: ModelSidebarProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,8 +46,8 @@ function ModelSidebar({
                                 model.type.slice(1)}
                         </h3>
                         <div className="model-control-buttons">
-                            <button>Select</button>
-                            <button>Delete</button>
+                        <button onClick={() => onSelectModel(index)}>Select</button>
+                            <button onClick={() => onDeleteModel(index) }>Delete</button>
                         </div>
                     </div>
                 ))}

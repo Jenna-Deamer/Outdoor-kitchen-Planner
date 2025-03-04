@@ -14,8 +14,7 @@ function Fridge({
     isSelected: boolean;
 }) {
     const { scene } = useGLTF(fridgeModel);
-    // Creates a memoized clone of the scene UseMemo ensures only clones when dependcy changes
-    const clonedScene = useMemo(() => scene.clone(), [scene]); // without cloning the scene would create a new model and dispose of the old one (Preventing multiple of the same model)
+    const clonedScene = useMemo(() => scene.clone(), [scene]);
     const ref = useRef<THREE.Group>(null);
     const [size, setSize] = useState<[number, number, number]>([1, 1, 1]);
     const [center, setCenter] = useState<[number, number, number]>([0, 0, 0]);
@@ -27,12 +26,11 @@ function Fridge({
             box.getSize(dimensions);
             const center = new Vector3();
             box.getCenter(center);
-            // Adjust for the group's position
             center.sub(new Vector3(...position));
             setSize([dimensions.x, dimensions.y, dimensions.z]);
             setCenter([center.x, center.y, center.z]);
         }
-    }, [position]);
+    }, [position, scene]);
 
     return (
         <group ref={ref} position={position} onClick={onClick}>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AddApplianceModal from "../components/AddApplianceModal";
+import AddApplianceModal from "./AddApplianceModal.tsx";
 import "../styles/modelSidebar.css";
 import "../styles/addApplianceModal.css";
 import PlusIcon from "../assets/icons/plus.tsx";

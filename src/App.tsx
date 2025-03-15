@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useState, useEffect, useCallback } from "react";
+import { createXRStore, XR } from '@react-three/xr'
 
 // Components
 import ModelSidebar from "./components/ModelSidebar";
@@ -17,6 +18,7 @@ type Model = { type: string; position: [number, number, number] };
 
 function App() {
     const [models, setModels] = useState<Model[]>([]);
+    const XRStore = createXRStore()
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
         null
     );
@@ -112,66 +114,75 @@ function App() {
                 onDeleteModel={handleDeleteModel}
             />
 
+            <button id="ar-button" onClick={() => {
+                console.log("AR button clicked");
+                XRStore.enterAR();
+            }}>
+                View AR
+            </button>
+
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
-                <ambientLight intensity={1} />
-                <SkyBox />
-                <Ground />
-                {selectedCounterType === "straight" ? (
-                    <StraightCounter>
-                        {models.map((model, index) => {
-                            const isSelected = index === selectedModelIndex;
-                            if (model.type === "cabinet") {
-                                return (
-                                    <Cabinet
-                                        key={index}
-                                        position={model.position} // New position will trigger re-render
-                                        onClick={() => handleModelClick(index)}
-                                        isSelected={isSelected}
-                                    />
-                                );
-                            }
-                            if (model.type === "fridge") {
-                                return (
-                                    <Fridge
-                                        key={index}
-                                        position={model.position} // New position will trigger re-render
-                                        onClick={() => handleModelClick(index)}
-                                        isSelected={isSelected}
-                                    />
-                                );
-                            }
-                            return null;
-                        })}
-                    </StraightCounter>
-                ) : (
-                    <LShapedCounter>
-                        {models.map((model, index) => {
-                            const isSelected = index === selectedModelIndex;
-                            if (model.type === "cabinet") {
-                                return (
-                                    <Cabinet
-                                        key={index}
-                                        position={model.position} // New position will trigger re-render
-                                        onClick={() => handleModelClick(index)}
-                                        isSelected={isSelected}
-                                    />
-                                );
-                            }
-                            if (model.type === "fridge") {
-                                return (
-                                    <Fridge
-                                        key={index}
-                                        position={model.position} // New position will trigger re-render
-                                        onClick={() => handleModelClick(index)}
-                                        isSelected={isSelected}
-                                    />
-                                );
-                            }
-                            return null;
-                        })}
-                    </LShapedCounter>
-                )}
-                <OrbitControls />
+                <XR store={XRStore} >
+                    <ambientLight intensity={1} />
+                    <SkyBox />
+                    <Ground />
+                    {selectedCounterType === "straight" ? (
+                        <StraightCounter>
+                            {models.map((model, index) => {
+                                const isSelected = index === selectedModelIndex;
+                                if (model.type === "cabinet") {
+                                    return (
+                                        <Cabinet
+                                            key={index}
+                                            position={model.position} // New position will trigger re-render
+                                            onClick={() => handleModelClick(index)}
+                                            isSelected={isSelected}
+                                        />
+                                    );
+                                }
+                                if (model.type === "fridge") {
+                                    return (
+                                        <Fridge
+                                            key={index}
+                                            position={model.position} // New position will trigger re-render
+                                            onClick={() => handleModelClick(index)}
+                                            isSelected={isSelected}
+                                        />
+                                    );
+                                }
+                                return null;
+                            })}
+                        </StraightCounter>
+                    ) : (
+                        <LShapedCounter>
+                            {models.map((model, index) => {
+                                const isSelected = index === selectedModelIndex;
+                                if (model.type === "cabinet") {
+                                    return (
+                                        <Cabinet
+                                            key={index}
+                                            position={model.position} // New position will trigger re-render
+                                            onClick={() => handleModelClick(index)}
+                                            isSelected={isSelected}
+                                        />
+                                    );
+                                }
+                                if (model.type === "fridge") {
+                                    return (
+                                        <Fridge
+                                            key={index}
+                                            position={model.position} // New position will trigger re-render
+                                            onClick={() => handleModelClick(index)}
+                                            isSelected={isSelected}
+                                        />
+                                    );
+                                }
+                                return null;
+                            })}
+                        </LShapedCounter>
+                    )}
+                    <OrbitControls />
+                </XR>
             </Canvas>
         </main>
     );

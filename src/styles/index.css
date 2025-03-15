@@ -81,6 +81,12 @@ button:hover {
     background-color: var(--hover-color);
 }
 
+#ar-button{
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    z-index: 100;
+}
 .text-xs {
     font-size: var(--font-size-xs);
 }

@@ -19,7 +19,7 @@ type Model = { type: string; position: [number, number, number] };
 function App() {
     const [models, setModels] = useState<Model[]>([]);
     const XRStore = createXRStore();
-    const [isPrsenting, setIsPresenting] = useState(false);
+    const [isPresenting, setIsPresenting] = useState(false);
 
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
         null
@@ -130,7 +130,7 @@ function App() {
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <XR store={XRStore}>
                     <ambientLight intensity={1} />
-                    {!isPrsenting && (
+                    {!isPresenting && (
                         <>
                             <SkyBox />
                             <Ground />

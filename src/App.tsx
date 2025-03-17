@@ -120,8 +120,10 @@ function App() {
                 id="ar-button"
                 onClick={() => {
                     console.log("AR button clicked");
-                    XRStore.enterAR();
                     setIsPresenting(true);
+                    XRStore.enterAR();
+
+                    console.log("isPresenting:", isPresenting);
                 }}
             >
                 View AR
@@ -132,7 +134,6 @@ function App() {
                     <ambientLight intensity={1} />
                     {!isPresenting && (
                         <>
-                            <SkyBox />
                             <Ground />
                         </>
                     )}

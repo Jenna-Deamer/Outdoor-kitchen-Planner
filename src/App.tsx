@@ -19,7 +19,7 @@ type Model = { type: string; position: [number, number, number] };
 function App() {
     const [models, setModels] = useState<Model[]>([]);
     const XRStore = createXRStore();
-
+    const [isARMode, setIsARMode] = useState(false);
 
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
         null
@@ -121,6 +121,7 @@ function App() {
                 onClick={() => {
                     console.log("AR button clicked");
                     XRStore.enterAR();
+                    setIsARMode(true);
                 }}
             >
                 View AR
@@ -134,7 +135,7 @@ function App() {
                     <Ground />
 
                     {selectedCounterType === "straight" ? (
-                        <StraightCounter>
+                        <StraightCounter position={[0, 0, -2]}>
                             {models.map((model, index) => {
                                 const isSelected = index === selectedModelIndex;
                                 if (model.type === "cabinet") {
@@ -197,7 +198,8 @@ function App() {
                         </LShapedCounter>
                     )}
                     <OrbitControls />
-                  <XROrigin position-z={4}/>
+                    {!isARMode && <OrbitControls />}
+                    <XROrigin position={[0, 0, 0]} />
                 </XR>
             </Canvas>
         </main>

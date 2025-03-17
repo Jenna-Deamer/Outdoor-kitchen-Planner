@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useState, useEffect, useCallback } from "react";
-import { createXRStore, XR } from "@react-three/xr";
+import { createXRStore, XR, XROrigin } from "@react-three/xr";
 
 // Components
 import ModelSidebar from "./components/ModelSidebar";
@@ -19,7 +19,7 @@ type Model = { type: string; position: [number, number, number] };
 function App() {
     const [models, setModels] = useState<Model[]>([]);
     const XRStore = createXRStore();
-    const [isPresenting, setIsPresenting] = useState(false);
+
 
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
         null
@@ -120,10 +120,7 @@ function App() {
                 id="ar-button"
                 onClick={() => {
                     console.log("AR button clicked");
-                    setIsPresenting(true);
                     XRStore.enterAR();
-
-                    console.log("isPresenting:", isPresenting);
                 }}
             >
                 View AR
@@ -132,11 +129,10 @@ function App() {
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <XR store={XRStore}>
                     <ambientLight intensity={1} />
-                    {!isPresenting && (
-                        <>
-                            <Ground />
-                        </>
-                    )}
+
+
+                    <Ground />
+
                     {selectedCounterType === "straight" ? (
                         <StraightCounter>
                             {models.map((model, index) => {
@@ -201,6 +197,7 @@ function App() {
                         </LShapedCounter>
                     )}
                     <OrbitControls />
+                  <XROrigin position-z={4}/>
                 </XR>
             </Canvas>
         </main>

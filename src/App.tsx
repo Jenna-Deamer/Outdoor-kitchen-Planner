@@ -135,7 +135,7 @@ function App() {
                     <Ground />
 
                     {selectedCounterType === "straight" ? (
-                        <StraightCounter position={[0, 0, -2]}>
+                        <StraightCounter>
                             {models.map((model, index) => {
                                 const isSelected = index === selectedModelIndex;
                                 if (model.type === "cabinet") {
@@ -199,7 +199,7 @@ function App() {
                     )}
                     <OrbitControls />
                     {!isARMode && <OrbitControls />}
-                    <XROrigin position={[0, 0, 0]} />
+                    <XROrigin position={[0, 0, 4.5]} />
                 </XR>
             </Canvas>
         </main>

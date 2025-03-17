@@ -6,7 +6,7 @@ import { createXRStore, XR } from "@react-three/xr";
 // Components
 import ModelSidebar from "./components/ModelSidebar";
 import CounterSelection from "./components/CounterSelection";
-import SkyBox from "./components/SkyBox";
+// import SkyBox from "./components/SkyBox";
 // Models
 import Ground from "./components/models/Ground";
 import StraightCounter from "./components/models/StraightCounter";

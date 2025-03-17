@@ -117,7 +117,7 @@ function App() {
 
                     {/* Render the counter relative to the user in AR mode */}
                     {isARMode ? (
-                        <group position={[0, 0, -2]}> 
+                        <group position={[0, 0, -4]}> 
                             {selectedCounterType === "straight" ? (
                                 <StraightCounter>
                                     {models.map((model, index) => {

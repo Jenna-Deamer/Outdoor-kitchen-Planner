@@ -78,14 +78,6 @@ function ARUIElement({ onButtonClick }: ARUIElementProps) {
 
         console.log("AR UI Element clicked!");
         setIsClicked(true);
-
-        if (onButtonClick) {
-            onButtonClick();
-            // Reset clicked state after a short delay
-            setTimeout(() => {
-                setIsClicked(false);
-            }, 300);
-        }
     };
 
     // Common material for both bars of the X

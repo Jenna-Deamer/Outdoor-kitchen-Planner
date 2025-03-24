@@ -7,6 +7,7 @@ import { createXRStore, XR, XROrigin } from "@react-three/xr";
 import ModelSidebar from "./components/ModelSidebar";
 import CounterSelection from "./components/CounterSelection";
 import ARUIElement from "./components/ARUIElement";
+
 // Models
 import Ground from "./components/models/Ground";
 import StraightCounter from "./components/models/StraightCounter";
@@ -21,14 +22,27 @@ function App() {
     const [models, setModels] = useState<Model[]>([]);
     const [session, setSession] = useState<XRSession | null>(null);
     const XRStore = createXRStore({});
+    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
+        null
+    );
+    const [selectedCounterType, setSelectedCounterType] = useState<
+        string | null
+    >(null);
+    const [arSessionId, setArSessionId] = useState<number>(0);
+
+    const handleSelectCounter = (counterType: string) => {
+        setSelectedCounterType(counterType);
+    };
 
     const handleARSession = async () => {
         try {
             const newSession = await XRStore.enterAR();
             if (newSession) {
                 setSession(newSession);
+                // Force re-render of ARUIElement
+                setArSessionId((prevId) => prevId + 1);
                 newSession.addEventListener("end", () => {
-                    // Reset when session ends (including back button press)
+                    // Reset when session ends (including phone back button press)
                     setSession(null);
                 });
             }
@@ -37,15 +51,19 @@ function App() {
         }
     };
 
-    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
-        null
-    );
-    const [selectedCounterType, setSelectedCounterType] = useState<
-        string | null
-    >(null);
-
-    const handleSelectCounter = (counterType: string) => {
-        setSelectedCounterType(counterType);
+    const handleExitARSession = async () => {
+        if (session) {
+            try {
+                // This is the same action that happens when the device back button is pressed
+                await session.end();
+                console.log("Successfully exited AR session");
+                // The session's end event listener (added in handleARSession) will handle clearing the session state
+            } catch (error) {
+                console.error("Error ending AR session:", error);
+                // Fallback - manually reset session state if the end method fails
+                setSession(null);
+            }
+        }
     };
 
     const handleAddCabinet = () => {
@@ -58,82 +76,45 @@ function App() {
 
     const handleModelClick = (index: number) => {
         setSelectedModelIndex(index);
-        console.log("Selected model index: ", index);
     };
 
     const handleDeleteModel = (index: number) => {
-        if (!window.confirm("Are you sure you want to delete this model?")) {
+        if (!window.confirm("Are you sure you want to delete this model?"))
             return;
-        }
         setModels(models.filter((_, i) => i !== index));
         setSelectedModelIndex(null);
     };
 
     const handleMoveModel = useCallback(
         (direction: "left" | "right") => {
-            if (selectedModelIndex !== null) {
-                const updatedModels = models.map((model, index) => {
+            if (selectedModelIndex === null) return;
+
+            setModels(
+                models.map((model, index) => {
                     if (index === selectedModelIndex) {
+                        const moveDistance = 0.1;
                         const newPosition: [number, number, number] = [
                             ...model.position,
                         ];
-                        const moveDistance = 0.1;
-                        if (direction === "left") {
-                            newPosition[0] -= moveDistance;
-                        } else if (direction === "right") {
-                            newPosition[0] += moveDistance;
-                        }
+                        newPosition[0] +=
+                            direction === "left" ? -moveDistance : moveDistance;
                         return { ...model, position: newPosition };
                     }
                     return model;
-                });
-                setModels(updatedModels);
-            }
+                })
+            );
         },
         [selectedModelIndex, models]
     );
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "ArrowLeft") {
-                handleMoveModel("left");
-            } else if (e.key === "ArrowRight") {
-                handleMoveModel("right");
-            }
+            if (e.key === "ArrowLeft") handleMoveModel("left");
+            else if (e.key === "ArrowRight") handleMoveModel("right");
         };
         window.addEventListener("keydown", handleKeyDown);
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [selectedModelIndex, models, handleMoveModel]);
-
-    // Render models helper function to avoid code duplication
-    const renderModels = () => {
-        return models.map((model, index) => {
-            const isSelected = index === selectedModelIndex;
-            if (model.type === "cabinet") {
-                return (
-                    <Cabinet
-                        key={index}
-                        position={model.position}
-                        onClick={() => handleModelClick(index)}
-                        isSelected={isSelected}
-                    />
-                );
-            }
-            if (model.type === "fridge") {
-                return (
-                    <Fridge
-                        key={index}
-                        position={model.position}
-                        onClick={() => handleModelClick(index)}
-                        isSelected={isSelected}
-                    />
-                );
-            }
-            return null;
-        });
-    };
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [handleMoveModel]);
 
     if (!selectedCounterType) {
         return <CounterSelection onSelectCounter={handleSelectCounter} />;
@@ -141,6 +122,23 @@ function App() {
 
     return (
         <main>
+            <div
+                id="dom-overlay"
+                style={{
+                    position: "fixed",
+                    top: 20,
+                    right: 20,
+                    zIndex: 1000,
+                    pointerEvents: "auto",
+                }}
+            >
+                {!session && (
+                    <button className="ar-button" onClick={handleARSession}>
+                        View AR
+                    </button>
+                )}
+            </div>
+
             <ModelSidebar
                 onAddCabinet={handleAddCabinet}
                 onAddFridge={handleAddFridge}
@@ -149,12 +147,6 @@ function App() {
                 onDeleteModel={handleDeleteModel}
             />
 
-            {!session && (
-                <button className="ar-button" onClick={handleARSession}>
-                    View AR
-                </button>
-            )}
-
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <XR store={XRStore}>
                     <ambientLight intensity={1} />
@@ -162,34 +154,67 @@ function App() {
                     {!session && <Ground />}
                     {!session && <SkyComponent />}
 
-                    {session ? (
-                        <>
-                            <group position={[0, 0, -4]}>
-                                {selectedCounterType === "straight" ? (
-                                    <StraightCounter>
-                                        {renderModels()}
-                                    </StraightCounter>
-                                ) : (
-                                    <LShapedCounter>
-                                        {renderModels()}
-                                    </LShapedCounter>
-                                )}
-                            </group>
-                        </>
-                    ) : (
-                        <>
-                            {selectedCounterType === "straight" ? (
-                                <StraightCounter>
-                                    {renderModels()}
-                                </StraightCounter>
-                            ) : (
-                                <LShapedCounter>
-                                    {renderModels()}
-                                </LShapedCounter>
-                            )}
-                        </>
+                    <group position={session ? [0, 0, -4] : [0, 0, 0]}>
+                        {selectedCounterType === "straight" ? (
+                            <StraightCounter>
+                                {models.map((model, index) => {
+                                    const isSelected =
+                                        index === selectedModelIndex;
+                                    return model.type === "cabinet" ? (
+                                        <Cabinet
+                                            key={index}
+                                            position={model.position}
+                                            onClick={() =>
+                                                handleModelClick(index)
+                                            }
+                                            isSelected={isSelected}
+                                        />
+                                    ) : model.type === "fridge" ? (
+                                        <Fridge
+                                            key={index}
+                                            position={model.position}
+                                            onClick={() =>
+                                                handleModelClick(index)
+                                            }
+                                            isSelected={isSelected}
+                                        />
+                                    ) : null;
+                                })}
+                            </StraightCounter>
+                        ) : (
+                            <LShapedCounter>
+                                {models.map((model, index) => {
+                                    const isSelected =
+                                        index === selectedModelIndex;
+                                    return model.type === "cabinet" ? (
+                                        <Cabinet
+                                            key={index}
+                                            position={model.position}
+                                            onClick={() =>
+                                                handleModelClick(index)
+                                            }
+                                            isSelected={isSelected}
+                                        />
+                                    ) : model.type === "fridge" ? (
+                                        <Fridge
+                                            key={index}
+                                            position={model.position}
+                                            onClick={() =>
+                                                handleModelClick(index)
+                                            }
+                                            isSelected={isSelected}
+                                        />
+                                    ) : null;
+                                })}
+                            </LShapedCounter>
+                        )}
+                    </group>
+                    {session && (
+                        <ARUIElement
+                            key={`ar-ui-${arSessionId}`}
+                            onButtonClick={handleExitARSession}
+                        />
                     )}
-                    {session && <ARUIElement onExitAR={() => session?.end()} />}
                     {!session && <OrbitControls />}
                     <XROrigin />
                 </XR>

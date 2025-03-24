@@ -3,15 +3,12 @@
 import { useThree, useFrame } from "@react-three/fiber";
 import { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
-import { useXR } from "@react-three/xr";
-import { Html } from "@react-three/drei";
 
 interface ARUIElementProps {
-    onExitAR: () => void;
+    onButtonClick?: () => void;
 }
 
-const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
-    const { isPresenting } = useXR();
+function ARUIElement({ onButtonClick }: ARUIElementProps) {
     const { camera } = useThree();
     const groupRef = useRef<THREE.Group>(null);
     const [isClicked, setIsClicked] = useState(false);
@@ -19,6 +16,17 @@ const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
         action: "#872341",
         hover: "#BE3144",
     });
+
+    // Reset clicked state whenever component mounts
+    useEffect(() => {
+        setIsClicked(false);
+        console.log("ARUIElement mounted/reset");
+
+        // Cleanup
+        return () => {
+            console.log("ARUIElement unmounted");
+        };
+    }, []);
 
     // Get CSS variables
     useEffect(() => {
@@ -57,7 +65,7 @@ const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
         position.add(right.multiplyScalar(rightOffset));
         position.add(up.multiplyScalar(upOffset));
 
-        // Update the position of the group
+        // Update position
         groupRef.current.position.copy(position);
 
         // Always face the camera (billboarding technique)
@@ -65,9 +73,15 @@ const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
     });
 
     const handleClick = (event) => {
-        event.stopPropagation(); // Prevent click from propagating to objects behind
-        setIsClicked(!isClicked);
+        event.stopPropagation();
+        event.preventDefault();
+
         console.log("AR UI Element clicked!");
+        setIsClicked(true);
+
+        setTimeout(() => {
+            if (onButtonClick) onButtonClick();
+        }, 100);
     };
 
     // Common material for both bars of the X
@@ -84,61 +98,39 @@ const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
     const thickness = 0.01;
     const depth = 0.01;
 
-    if (!isPresenting) return null;
-
     return (
-        <>
-            <group ref={groupRef} onClick={handleClick}>
-                {/* First bar of the X (bottom-left to top-right) */}
-                <mesh rotation={[0, 0, Math.PI / 4]}>
-                    <boxGeometry args={[length, thickness, depth]} />
-                    <meshStandardMaterial {...material} />
-                </mesh>
+        <group
+            ref={groupRef}
+            onClick={handleClick}
+            // Add pointer events to make it more interactive
+            onPointerDown={(e) => {
+                e.stopPropagation();
+                setIsClicked(true);
+            }}
+            onPointerUp={(e) => {
+                e.stopPropagation();
+                if (onButtonClick) onButtonClick();
+            }}
+        >
+            {/* First bar of the X (bottom-left to top-right) */}
+            <mesh rotation={[0, 0, Math.PI / 4]}>
+                <boxGeometry args={[length, thickness, depth]} />
+                <meshStandardMaterial {...material} />
+            </mesh>
 
-                {/* Second bar of the X (top-left to bottom-right) */}
-                <mesh rotation={[0, 0, -Math.PI / 4]}>
-                    <boxGeometry args={[length, thickness, depth]} />
-                    <meshStandardMaterial {...material} />
-                </mesh>
+            {/* Second bar of the X (top-left to bottom-right) */}
+            <mesh rotation={[0, 0, -Math.PI / 4]}>
+                <boxGeometry args={[length, thickness, depth]} />
+                <meshStandardMaterial {...material} />
+            </mesh>
 
-                {/* Invisible hit area to make clicking easier */}
-                <mesh visible={false} scale={[1.2, 1.2, 1.2]}>
-                    <sphereGeometry args={[length / 2, 16, 16]} />
-                    <meshBasicMaterial transparent opacity={0} />
-                </mesh>
-            </group>
-            <Html position={[0, 1.6, -0.5]} transform distanceFactor={1}>
-                <div
-                    style={{
-                        background: "rgba(0, 0, 0, 0.5)",
-                        color: "white",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        userSelect: "none",
-                    }}
-                >
-                    <h3 style={{ margin: "0 0 10px 0" }}>AR Mode Active</h3>
-                    <button
-                        onClick={onExitAR}
-                        style={{
-                            background: "#ff3333",
-                            color: "white",
-                            border: "none",
-                            padding: "8px 16px",
-                            borderRadius: "4px",
-                            fontWeight: "bold",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Exit AR
-                    </button>
-                </div>
-            </Html>
-        </>
+            {/* Invisible hit area to make clicking easier */}
+            <mesh visible={false} scale={[1.2, 1.2, 1.2]}>
+                <sphereGeometry args={[length / 2, 16, 16]} />
+                <meshBasicMaterial transparent opacity={0} />
+            </mesh>
+        </group>
     );
-};
+}
 
 export default ARUIElement;

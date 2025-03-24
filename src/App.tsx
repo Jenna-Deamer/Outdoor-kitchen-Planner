@@ -175,7 +175,7 @@ function App() {
                                     </LShapedCounter>
                                 )}
                             </group>
-                            <ARUIElement onExitAR={() => session?.end()} />
+                            <ARUIElement />
                         </>
                     ) : (
                         <>

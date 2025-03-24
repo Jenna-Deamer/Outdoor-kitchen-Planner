@@ -10,7 +10,7 @@ interface ARUIElementProps {
     onExitAR: () => void;
 }
 
-const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
+const ARUIElement: React.FC<ARUIElementProps> = () => {
     const { isPresenting } = useXR();
     const { camera } = useThree();
     const groupRef = useRef<THREE.Group>(null);

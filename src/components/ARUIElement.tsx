@@ -6,67 +6,31 @@ import * as THREE from "three";
 
 interface ARUIElementProps {
     onButtonClick?: () => void;
-    sessionId?: string | number;
+    key?: string | number; // Add key prop to help with remounting
 }
 
-function ARUIElement({ onButtonClick, sessionId }: ARUIElementProps) {
-    const { camera, gl } = useThree(); // Add gl for raycaster
+function ARUIElement({ onButtonClick, key }: ARUIElementProps) {
+    const { camera } = useThree();
     const groupRef = useRef<THREE.Group>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isActive, setIsActive] = useState(false);
-    const raycaster = useRef(new THREE.Raycaster());
-    const mouse = useRef(new THREE.Vector2());
+    const clickTimeoutRef = useRef<NodeJS.Timeout>();
 
-    // Clean up function for manual event listeners
+    const colors = {
+        action: "#872341",
+        hover: "#BE3144",
+        active: "#F05941",
+    };
+
+    // Clean up any pending timeouts when component unmounts
     useEffect(() => {
-        const canvas = gl.domElement;
-
-        // Manually handle touch/click events
-        const handleTouchStart = (event) => {
-            event.preventDefault();
-            if (!groupRef.current) return;
-
-            // Calculate normalized device coordinates
-            const touch = event.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            mouse.current.x =
-                ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.current.y =
-                -((touch.clientY - rect.top) / rect.height) * 2 + 1;
-
-            // Check if our X button is hit
-            raycaster.current.setFromCamera(mouse.current, camera);
-            const intersects = raycaster.current.intersectObject(
-                groupRef.current,
-                true
-            );
-
-            if (intersects.length > 0) {
-                setIsActive(true);
-            }
-        };
-
-        const handleTouchEnd = (event) => {
-            event.preventDefault();
-            if (isActive && onButtonClick) {
-                onButtonClick();
-            }
-            setIsActive(false);
-            setIsHovered(false);
-        };
-
-        // Add event listeners to the canvas
-        canvas.addEventListener("touchstart", handleTouchStart, {
-            passive: false,
-        });
-        canvas.addEventListener("touchend", handleTouchEnd, { passive: false });
-
-        // Cleanup
+        const timeoutId = clickTimeoutRef.current;
         return () => {
-            canvas.removeEventListener("touchstart", handleTouchStart);
-            canvas.removeEventListener("touchend", handleTouchEnd);
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
         };
-    }, [camera, gl, isActive, onButtonClick, sessionId]);
+    }, []);
 
     // Position and orient the element relative to the camera
     useFrame(() => {
@@ -90,18 +54,37 @@ function ARUIElement({ onButtonClick, sessionId }: ARUIElementProps) {
         groupRef.current.quaternion.copy(camera.quaternion);
     });
 
+    const handlePointerDown = (e: THREE.Event) => {
+        e.stopPropagation();
+        setIsActive(true);
+    };
+
+    const handlePointerUp = (e: THREE.Event) => {
+        e.stopPropagation();
+
+        if (isActive && onButtonClick) {
+            onButtonClick();
+        }
+
+        setIsActive(false);
+        setIsHovered(false);
+    };
+
+    const handlePointerOver = () => {
+        setIsHovered(true);
+    };
+
+    const handlePointerOut = () => {
+        setIsHovered(false);
+        setIsActive(false);
+    };
+
     // Determine the current color based on state
     const currentColor = isActive
         ? colors.active
         : isHovered
         ? colors.hover
         : colors.action;
-
-    const colors = {
-        action: "#872341",
-        hover: "#BE3144",
-        active: "#F05941",
-    };
 
     // Size parameters for the X
     const length = 0.06;
@@ -120,7 +103,11 @@ function ARUIElement({ onButtonClick, sessionId }: ARUIElementProps) {
     return (
         <group
             ref={groupRef}
-            key={sessionId} // Use sessionId to ensure proper remounting
+            key={key} // Use key to ensure proper remounting
+            onPointerOver={handlePointerOver}
+            onPointerOut={handlePointerOut}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
         >
             {/* First bar of the X (bottom-left to top-right) */}
             <mesh rotation={[0, 0, Math.PI / 4]}>
@@ -136,8 +123,7 @@ function ARUIElement({ onButtonClick, sessionId }: ARUIElementProps) {
 
             {/* Invisible hit area (larger than visual for better UX) */}
             <mesh visible={false}>
-                <sphereGeometry args={[0.1, 16, 16]} />{" "}
-                {/* Increased hit area size */}
+                <sphereGeometry args={[length, 16, 16]} />
                 <meshBasicMaterial transparent opacity={0} />
             </mesh>
         </group>

@@ -17,7 +17,7 @@ function ARUIElement({ onButtonClick }: ARUIElementProps) {
         hover: "#BE3144",
     });
 
-    // Reset clicked state whenever component mounts
+    // Reset clicked state whenever component mounts or remounts
     useEffect(() => {
         setIsClicked(false);
         console.log("ARUIElement mounted/reset");
@@ -79,9 +79,13 @@ function ARUIElement({ onButtonClick }: ARUIElementProps) {
         console.log("AR UI Element clicked!");
         setIsClicked(true);
 
-        setTimeout(() => {
-            if (onButtonClick) onButtonClick();
-        }, 100);
+        if (onButtonClick) {
+            onButtonClick();
+            // Reset clicked state after a short delay
+            setTimeout(() => {
+                setIsClicked(false);
+            }, 300);
+        }
     };
 
     // Common material for both bars of the X
@@ -102,14 +106,24 @@ function ARUIElement({ onButtonClick }: ARUIElementProps) {
         <group
             ref={groupRef}
             onClick={handleClick}
-            // Add pointer events to make it more interactive
+            // Simplify pointer events to make it more reliable
             onPointerDown={(e) => {
                 e.stopPropagation();
                 setIsClicked(true);
             }}
             onPointerUp={(e) => {
                 e.stopPropagation();
-                if (onButtonClick) onButtonClick();
+                if (onButtonClick) {
+                    onButtonClick();
+                    // Reset clicked state after a short delay
+                    setTimeout(() => {
+                        setIsClicked(false);
+                    }, 300);
+                }
+            }}
+            onPointerLeave={() => {
+                // Reset state if pointer leaves the element
+                setIsClicked(false);
             }}
         >
             {/* First bar of the X (bottom-left to top-right) */}
@@ -124,8 +138,8 @@ function ARUIElement({ onButtonClick }: ARUIElementProps) {
                 <meshStandardMaterial {...material} />
             </mesh>
 
-            {/* Invisible hit area to make clicking easier */}
-            <mesh visible={false} scale={[1.2, 1.2, 1.2]}>
+            {/* Increase hit area size to make clicking easier */}
+            <mesh visible={false} scale={[1.5, 1.5, 1.5]}>
                 <sphereGeometry args={[length / 2, 16, 16]} />
                 <meshBasicMaterial transparent opacity={0} />
             </mesh>

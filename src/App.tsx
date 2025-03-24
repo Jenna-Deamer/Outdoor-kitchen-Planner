@@ -36,15 +36,23 @@ function App() {
 
     const handleARSession = async () => {
         try {
+            // Clear any existing session first
+            if (session) {
+                await handleExitARSession();
+            }
+
             const newSession = await XRStore.enterAR();
             if (newSession) {
                 setSession(newSession);
-                // Force re-render of ARUIElement
                 setArSessionId((prevId) => prevId + 1);
-                newSession.addEventListener("end", () => {
-                    // Reset when session ends (including phone back button press)
+
+                const onSessionEnd = () => {
+                    console.log("Session ended");
                     setSession(null);
-                });
+                    newSession.removeEventListener("end", onSessionEnd);
+                };
+
+                newSession.addEventListener("end", onSessionEnd);
             }
         } catch (error) {
             console.error("AR session error:", error);
@@ -54,13 +62,9 @@ function App() {
     const handleExitARSession = async () => {
         if (session) {
             try {
-                // This is the same action that happens when the device back button is pressed
                 await session.end();
-                console.log("Successfully exited AR session");
-                // The session's end event listener (added in handleARSession) will handle clearing the session state
             } catch (error) {
                 console.error("Error ending AR session:", error);
-                // Fallback - manually reset session state if the end method fails
                 setSession(null);
             }
         }

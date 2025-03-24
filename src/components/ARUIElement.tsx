@@ -6,117 +6,108 @@ import * as THREE from "three";
 
 interface ARUIElementProps {
     onButtonClick?: () => void;
+    key?: string | number; // Add key prop to help with remounting
 }
 
-function ARUIElement({ onButtonClick }: ARUIElementProps) {
+function ARUIElement({ onButtonClick, key }: ARUIElementProps) {
     const { camera } = useThree();
     const groupRef = useRef<THREE.Group>(null);
-    const [isClicked, setIsClicked] = useState(false);
-    const [colors, setColors] = useState({
+    const [isHovered, setIsHovered] = useState(false);
+    const [isActive, setIsActive] = useState(false);
+    const clickTimeoutRef = useRef<NodeJS.Timeout>();
+
+    const colors = {
         action: "#872341",
         hover: "#BE3144",
-    });
+        active: "#F05941",
+    };
 
-    // Reset clicked state whenever component mounts or remounts
+    // Clean up any pending timeouts when component unmounts
     useEffect(() => {
-        setIsClicked(false);
-        console.log("ARUIElement mounted/reset");
-
-        // Cleanup
+        const timeoutId = clickTimeoutRef.current;
         return () => {
-            console.log("ARUIElement unmounted");
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
         };
     }, []);
 
-    // Get CSS variables
-    useEffect(() => {
-        const computedStyle = getComputedStyle(document.documentElement);
-        setColors({
-            action: computedStyle.getPropertyValue("--action-color").trim(),
-            hover: computedStyle.getPropertyValue("--hover-color").trim(),
-        });
-    }, []);
-
-    // Use useFrame for smoother updates
+    // Position and orient the element relative to the camera
     useFrame(() => {
-        if (!groupRef.current) return;
+        if (!groupRef.current || !camera) return;
 
-        // Position the element directly in front of the camera
+        // Position 0.8m in front of camera top right
         const distance = 0.8;
-
-        // Create position vector - in front of camera, offset to top right
-        const position = new THREE.Vector3(0, 0, -distance);
-
-        // Add offsets for top-right positioning
         const rightOffset = 0.15;
         const upOffset = 0.45;
 
-        // Create vectors for right and up directions
-        const right = new THREE.Vector3(1, 0, 0);
-        right.applyQuaternion(camera.quaternion);
+        // Calculate position in world space
+        const position = new THREE.Vector3(
+            rightOffset,
+            upOffset,
+            -distance
+        ).applyMatrix4(camera.matrixWorld);
 
-        const up = new THREE.Vector3(0, 1, 0);
-        up.applyQuaternion(camera.quaternion);
-
-        // Apply camera's world matrix to get position in front of camera
-        position.applyMatrix4(camera.matrixWorld);
-
-        // Add offsets in the right and up directions
-        position.add(right.multiplyScalar(rightOffset));
-        position.add(up.multiplyScalar(upOffset));
-
-        // Update position
         groupRef.current.position.copy(position);
 
-        // Always face the camera (billboarding technique)
+        // Make the element always face the camera (billboarding)
         groupRef.current.quaternion.copy(camera.quaternion);
     });
 
-    const handleClick = (event) => {
-        event.stopPropagation();
-        event.preventDefault();
-
-        console.log("AR UI Element clicked!");
-        setIsClicked(true);
+    const handlePointerDown = (e: THREE.Event) => {
+        e.stopPropagation();
+        setIsActive(true);
     };
 
-    // Common material for both bars of the X
-    const material = {
-        color: isClicked ? colors.hover : colors.action,
-        opacity: 0.8,
-        transparent: true,
-        emissive: isClicked ? colors.hover : colors.action,
-        emissiveIntensity: 0.5,
+    const handlePointerUp = (e: THREE.Event) => {
+        e.stopPropagation();
+
+        if (isActive && onButtonClick) {
+            onButtonClick();
+        }
+
+        setIsActive(false);
+        setIsHovered(false);
     };
+
+    const handlePointerOver = () => {
+        setIsHovered(true);
+    };
+
+    const handlePointerOut = () => {
+        setIsHovered(false);
+        setIsActive(false);
+    };
+
+    // Determine the current color based on state
+    const currentColor = isActive
+        ? colors.active
+        : isHovered
+        ? colors.hover
+        : colors.action;
 
     // Size parameters for the X
     const length = 0.06;
     const thickness = 0.01;
     const depth = 0.01;
 
+    // Material configuration
+    const material = {
+        color: currentColor,
+        emissive: currentColor,
+        emissiveIntensity: 0.5,
+        transparent: true,
+        opacity: 0.9,
+    };
+
     return (
         <group
             ref={groupRef}
-            onClick={handleClick}
-            // Simplify pointer events to make it more reliable
-            onPointerDown={(e) => {
-                e.stopPropagation();
-                setIsClicked(true);
-            }}
-            onPointerUp={(e) => {
-                e.stopPropagation();
-                if (onButtonClick) {
-                    onButtonClick();
-                    // Reset clicked state after a short delay
-                    setTimeout(() => {
-                        setIsClicked(false);
-                    }, 300);
-                }
-            }}
-            onPointerLeave={() => {
-                // Reset state if pointer leaves the element
-                setIsClicked(false);
-            }}
+            key={key} // Use key to ensure proper remounting
+            onPointerOver={handlePointerOver}
+            onPointerOut={handlePointerOut}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
         >
             {/* First bar of the X (bottom-left to top-right) */}
             <mesh rotation={[0, 0, Math.PI / 4]}>
@@ -130,9 +121,9 @@ function ARUIElement({ onButtonClick }: ARUIElementProps) {
                 <meshStandardMaterial {...material} />
             </mesh>
 
-            {/* Increase hit area size to make clicking easier */}
-            <mesh visible={false} scale={[1.5, 1.5, 1.5]}>
-                <sphereGeometry args={[length / 2, 16, 16]} />
+            {/* Invisible hit area (larger than visual for better UX) */}
+            <mesh visible={false}>
+                <sphereGeometry args={[length, 16, 16]} />
                 <meshBasicMaterial transparent opacity={0} />
             </mesh>
         </group>

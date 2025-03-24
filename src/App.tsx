@@ -6,6 +6,7 @@ import { createXRStore, XR, XROrigin } from "@react-three/xr";
 // Components
 import ModelSidebar from "./components/ModelSidebar";
 import CounterSelection from "./components/CounterSelection";
+import ARUIElement from "./components/ARUIElement";
 // Models
 import Ground from "./components/models/Ground";
 import StraightCounter from "./components/models/StraightCounter";
@@ -91,6 +92,34 @@ function App() {
         };
     }, [selectedModelIndex, models, handleMoveModel]);
 
+    // Render models helper function to avoid code duplication
+    const renderModels = () => {
+        return models.map((model, index) => {
+            const isSelected = index === selectedModelIndex;
+            if (model.type === "cabinet") {
+                return (
+                    <Cabinet
+                        key={index}
+                        position={model.position}
+                        onClick={() => handleModelClick(index)}
+                        isSelected={isSelected}
+                    />
+                );
+            }
+            if (model.type === "fridge") {
+                return (
+                    <Fridge
+                        key={index}
+                        position={model.position}
+                        onClick={() => handleModelClick(index)}
+                        isSelected={isSelected}
+                    />
+                );
+            }
+            return null;
+        });
+    };
+
     if (!selectedCounterType) {
         return <CounterSelection onSelectCounter={handleSelectCounter} />;
     }
@@ -106,7 +135,7 @@ function App() {
             />
 
             <button
-                id="ar-button"
+                className="ar-button"
                 onClick={() => {
                     console.log("AR button clicked");
                     XRStore.enterAR();
@@ -122,141 +151,31 @@ function App() {
 
                     {!isARMode && <Ground />}
                     {!isARMode && <SkyComponent />}
-                    {/* Render the counter relative to the user in AR mode */}
+
                     {isARMode ? (
-                        <group position={[0, 0, -4]}>
-                            {selectedCounterType === "straight" ? (
-                                <StraightCounter>
-                                    {models.map((model, index) => {
-                                        const isSelected =
-                                            index === selectedModelIndex;
-                                        if (model.type === "cabinet") {
-                                            return (
-                                                <Cabinet
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        if (model.type === "fridge") {
-                                            return (
-                                                <Fridge
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        return null;
-                                    })}
-                                </StraightCounter>
-                            ) : (
-                                <LShapedCounter>
-                                    {models.map((model, index) => {
-                                        const isSelected =
-                                            index === selectedModelIndex;
-                                        if (model.type === "cabinet") {
-                                            return (
-                                                <Cabinet
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        if (model.type === "fridge") {
-                                            return (
-                                                <Fridge
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        return null;
-                                    })}
-                                </LShapedCounter>
-                            )}
-                        </group>
+                        <>
+                            <group position={[0, 0, -4]}>
+                                {selectedCounterType === "straight" ? (
+                                    <StraightCounter>
+                                        {renderModels()}
+                                    </StraightCounter>
+                                ) : (
+                                    <LShapedCounter>
+                                        {renderModels()}
+                                    </LShapedCounter>
+                                )}
+                            </group>
+                            <ARUIElement />
+                        </>
                     ) : (
-                        // Render the counter in its default position when not in AR mode
                         <>
                             {selectedCounterType === "straight" ? (
                                 <StraightCounter>
-                                    {models.map((model, index) => {
-                                        const isSelected =
-                                            index === selectedModelIndex;
-                                        if (model.type === "cabinet") {
-                                            return (
-                                                <Cabinet
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        if (model.type === "fridge") {
-                                            return (
-                                                <Fridge
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        return null;
-                                    })}
+                                    {renderModels()}
                                 </StraightCounter>
                             ) : (
                                 <LShapedCounter>
-                                    {models.map((model, index) => {
-                                        const isSelected =
-                                            index === selectedModelIndex;
-                                        if (model.type === "cabinet") {
-                                            return (
-                                                <Cabinet
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        if (model.type === "fridge") {
-                                            return (
-                                                <Fridge
-                                                    key={index}
-                                                    position={model.position}
-                                                    onClick={() =>
-                                                        handleModelClick(index)
-                                                    }
-                                                    isSelected={isSelected}
-                                                />
-                                            );
-                                        }
-                                        return null;
-                                    })}
+                                    {renderModels()}
                                 </LShapedCounter>
                             )}
                         </>

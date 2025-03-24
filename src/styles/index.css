@@ -8,10 +8,10 @@
     -moz-osx-font-smoothing: grayscale;
 
     /* Colors */
-    --primary-color: #09122C;
+    --primary-color: #09122c;
     --secondary-color: #152045;
     --action-color: #872341;
-    --hover-color: #BE3144;
+    --hover-color: #be3144;
     --white: #fff;
     --black: #1d1d1d;
 
@@ -81,7 +81,7 @@ button:hover {
     background-color: var(--hover-color);
 }
 
-#ar-button{
+.ar-button {
     position: fixed;
     top: 20px;
     left: 50%;

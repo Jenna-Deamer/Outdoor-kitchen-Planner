@@ -6,7 +6,11 @@ import * as THREE from "three";
 import { useXR } from "@react-three/xr";
 import { Html } from "@react-three/drei";
 
-const ARUIElement: React.FC<ARUIElementProps> = () => {
+interface ARUIElementProps {
+    onExitAR: () => void;
+}
+
+const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
     const { isPresenting } = useXR();
     const { camera } = useThree();
     const groupRef = useRef<THREE.Group>(null);

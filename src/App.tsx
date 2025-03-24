@@ -12,6 +12,7 @@ import StraightCounter from "./components/models/StraightCounter";
 import LShapedCounter from "./components/models/L-ShapedCounter";
 import Cabinet from "./components/models/Cabinet";
 import Fridge from "./components/models/Fridge";
+import SkyComponent from "./components/SkyBox";
 
 type Model = { type: string; position: [number, number, number] };
 
@@ -20,8 +21,12 @@ function App() {
     const XRStore = createXRStore();
     const [isARMode, setIsARMode] = useState(false);
 
-    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(null);
-    const [selectedCounterType, setSelectedCounterType] = useState<string | null>(null);
+    const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
+        null
+    );
+    const [selectedCounterType, setSelectedCounterType] = useState<
+        string | null
+    >(null);
 
     const handleSelectCounter = (counterType: string) => {
         setSelectedCounterType(counterType);
@@ -53,7 +58,9 @@ function App() {
             if (selectedModelIndex !== null) {
                 const updatedModels = models.map((model, index) => {
                     if (index === selectedModelIndex) {
-                        const newPosition: [number, number, number] = [...model.position];
+                        const newPosition: [number, number, number] = [
+                            ...model.position,
+                        ];
                         const moveDistance = 0.1;
                         if (direction === "left") {
                             newPosition[0] -= moveDistance;
@@ -114,20 +121,23 @@ function App() {
                     <ambientLight intensity={1} />
 
                     {!isARMode && <Ground />}
-
+                    {!isARMode && <SkyComponent />}
                     {/* Render the counter relative to the user in AR mode */}
                     {isARMode ? (
-                        <group position={[0, 0, -4]}> 
+                        <group position={[0, 0, -4]}>
                             {selectedCounterType === "straight" ? (
                                 <StraightCounter>
                                     {models.map((model, index) => {
-                                        const isSelected = index === selectedModelIndex;
+                                        const isSelected =
+                                            index === selectedModelIndex;
                                         if (model.type === "cabinet") {
                                             return (
                                                 <Cabinet
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -137,7 +147,9 @@ function App() {
                                                 <Fridge
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -148,13 +160,16 @@ function App() {
                             ) : (
                                 <LShapedCounter>
                                     {models.map((model, index) => {
-                                        const isSelected = index === selectedModelIndex;
+                                        const isSelected =
+                                            index === selectedModelIndex;
                                         if (model.type === "cabinet") {
                                             return (
                                                 <Cabinet
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -164,7 +179,9 @@ function App() {
                                                 <Fridge
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -180,13 +197,16 @@ function App() {
                             {selectedCounterType === "straight" ? (
                                 <StraightCounter>
                                     {models.map((model, index) => {
-                                        const isSelected = index === selectedModelIndex;
+                                        const isSelected =
+                                            index === selectedModelIndex;
                                         if (model.type === "cabinet") {
                                             return (
                                                 <Cabinet
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -196,7 +216,9 @@ function App() {
                                                 <Fridge
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -207,13 +229,16 @@ function App() {
                             ) : (
                                 <LShapedCounter>
                                     {models.map((model, index) => {
-                                        const isSelected = index === selectedModelIndex;
+                                        const isSelected =
+                                            index === selectedModelIndex;
                                         if (model.type === "cabinet") {
                                             return (
                                                 <Cabinet
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );
@@ -223,7 +248,9 @@ function App() {
                                                 <Fridge
                                                     key={index}
                                                     position={model.position}
-                                                    onClick={() => handleModelClick(index)}
+                                                    onClick={() =>
+                                                        handleModelClick(index)
+                                                    }
                                                     isSelected={isSelected}
                                                 />
                                             );

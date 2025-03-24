@@ -62,7 +62,9 @@ function App() {
     const handleExitARSession = async () => {
         if (session) {
             try {
+                console.log("Ending AR session...");
                 await session.end();
+                setSession(null);
             } catch (error) {
                 console.error("Error ending AR session:", error);
                 setSession(null);

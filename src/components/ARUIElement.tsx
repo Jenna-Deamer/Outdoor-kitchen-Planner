@@ -6,7 +6,7 @@ import * as THREE from "three";
 
 interface ARUIElementProps {
     onButtonClick?: () => void;
-    key?: string | number; // Add key prop to help with remounting
+    key?: string | number; //  key prop to help with remounting
 }
 
 function ARUIElement({ onButtonClick, key }: ARUIElementProps) {

@@ -3,8 +3,15 @@
 import { useThree, useFrame } from "@react-three/fiber";
 import { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
+import { useXR } from "@react-three/xr";
+import { Html } from "@react-three/drei";
 
-function ARUIElement() {
+interface ARUIElementProps {
+    onExitAR: () => void;
+}
+
+const ARUIElement = ({ onExitAR }: ARUIElementProps) => {
+    const { isPresenting } = useXR();
     const { camera } = useThree();
     const groupRef = useRef<THREE.Group>(null);
     const [isClicked, setIsClicked] = useState(false);
@@ -33,8 +40,8 @@ function ARUIElement() {
         const position = new THREE.Vector3(0, 0, -distance);
 
         // Add offsets for top-right positioning
-        const rightOffset = 0.15; // Right offset
-        const upOffset = 0.45; // Top offset
+        const rightOffset = 0.15;
+        const upOffset = 0.45;
 
         // Create vectors for right and up directions
         const right = new THREE.Vector3(1, 0, 0);
@@ -77,27 +84,61 @@ function ARUIElement() {
     const thickness = 0.01;
     const depth = 0.01;
 
+    if (!isPresenting) return null;
+
     return (
-        <group ref={groupRef} onClick={handleClick}>
-            {/* First bar of the X (bottom-left to top-right) */}
-            <mesh rotation={[0, 0, Math.PI / 4]}>
-                <boxGeometry args={[length, thickness, depth]} />
-                <meshStandardMaterial {...material} />
-            </mesh>
+        <>
+            <group ref={groupRef} onClick={handleClick}>
+                {/* First bar of the X (bottom-left to top-right) */}
+                <mesh rotation={[0, 0, Math.PI / 4]}>
+                    <boxGeometry args={[length, thickness, depth]} />
+                    <meshStandardMaterial {...material} />
+                </mesh>
 
-            {/* Second bar of the X (top-left to bottom-right) */}
-            <mesh rotation={[0, 0, -Math.PI / 4]}>
-                <boxGeometry args={[length, thickness, depth]} />
-                <meshStandardMaterial {...material} />
-            </mesh>
+                {/* Second bar of the X (top-left to bottom-right) */}
+                <mesh rotation={[0, 0, -Math.PI / 4]}>
+                    <boxGeometry args={[length, thickness, depth]} />
+                    <meshStandardMaterial {...material} />
+                </mesh>
 
-            {/* Invisible hit area to make clicking easier */}
-            <mesh visible={false} scale={[1.2, 1.2, 1.2]}>
-                <sphereGeometry args={[length / 2, 16, 16]} />
-                <meshBasicMaterial transparent opacity={0} />
-            </mesh>
-        </group>
+                {/* Invisible hit area to make clicking easier */}
+                <mesh visible={false} scale={[1.2, 1.2, 1.2]}>
+                    <sphereGeometry args={[length / 2, 16, 16]} />
+                    <meshBasicMaterial transparent opacity={0} />
+                </mesh>
+            </group>
+            <Html position={[0, 1.6, -0.5]} transform distanceFactor={1}>
+                <div
+                    style={{
+                        background: "rgba(0, 0, 0, 0.5)",
+                        color: "white",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        userSelect: "none",
+                    }}
+                >
+                    <h3 style={{ margin: "0 0 10px 0" }}>AR Mode Active</h3>
+                    <button
+                        onClick={onExitAR}
+                        style={{
+                            background: "#ff3333",
+                            color: "white",
+                            border: "none",
+                            padding: "8px 16px",
+                            borderRadius: "4px",
+                            fontWeight: "bold",
+                            cursor: "pointer",
+                        }}
+                    >
+                        Exit AR
+                    </button>
+                </div>
+            </Html>
+        </>
     );
-}
+};
 
 export default ARUIElement;

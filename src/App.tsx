@@ -19,8 +19,23 @@ type Model = { type: string; position: [number, number, number] };
 
 function App() {
     const [models, setModels] = useState<Model[]>([]);
-    const XRStore = createXRStore();
-    const [isARMode, setIsARMode] = useState(false);
+    const [session, setSession] = useState<XRSession | null>(null);
+    const XRStore = createXRStore({});
+
+    const handleARSession = async () => {
+        try {
+            const newSession = await XRStore.enterAR();
+            if (newSession) {
+                setSession(newSession);
+                newSession.addEventListener("end", () => {
+                    // Reset when session ends (including back button press)
+                    setSession(null);
+                });
+            }
+        } catch (error) {
+            console.error("AR session error:", error);
+        }
+    };
 
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
         null
@@ -134,25 +149,20 @@ function App() {
                 onDeleteModel={handleDeleteModel}
             />
 
-            <button
-                className="ar-button"
-                onClick={() => {
-                    console.log("AR button clicked");
-                    XRStore.enterAR();
-                    setIsARMode(true);
-                }}
-            >
-                View AR
-            </button>
+            {!session && (
+                <button className="ar-button" onClick={handleARSession}>
+                    View AR
+                </button>
+            )}
 
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">
                 <XR store={XRStore}>
                     <ambientLight intensity={1} />
 
-                    {!isARMode && <Ground />}
-                    {!isARMode && <SkyComponent />}
+                    {!session && <Ground />}
+                    {!session && <SkyComponent />}
 
-                    {isARMode ? (
+                    {session ? (
                         <>
                             <group position={[0, 0, -4]}>
                                 {selectedCounterType === "straight" ? (
@@ -165,7 +175,7 @@ function App() {
                                     </LShapedCounter>
                                 )}
                             </group>
-                            <ARUIElement />
+                            <ARUIElement onExitAR={() => session?.end()} />
                         </>
                     ) : (
                         <>
@@ -181,7 +191,7 @@ function App() {
                         </>
                     )}
 
-                    {!isARMode && <OrbitControls />}
+                    {!session && <OrbitControls />}
                     <XROrigin />
                 </XR>
             </Canvas>

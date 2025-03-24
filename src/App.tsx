@@ -122,22 +122,11 @@ function App() {
 
     return (
         <main>
-            <div
-                id="dom-overlay"
-                style={{
-                    position: "fixed",
-                    top: 20,
-                    right: 20,
-                    zIndex: 1000,
-                    pointerEvents: "auto",
-                }}
-            >
-                {!session && (
-                    <button className="ar-button" onClick={handleARSession}>
-                        View AR
-                    </button>
-                )}
-            </div>
+            {!session && (
+                <button className="ar-button" onClick={handleARSession}>
+                    View AR
+                </button>
+            )}
 
             <ModelSidebar
                 onAddCabinet={handleAddCabinet}

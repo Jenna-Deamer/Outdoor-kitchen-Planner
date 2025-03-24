@@ -175,7 +175,6 @@ function App() {
                                     </LShapedCounter>
                                 )}
                             </group>
-                            <ARUIElement onExitAR={() => session?.end()} />
                         </>
                     ) : (
                         <>
@@ -190,7 +189,7 @@ function App() {
                             )}
                         </>
                     )}
-
+                    {session && <ARUIElement onExitAR={() => session?.end()} />}
                     {!session && <OrbitControls />}
                     <XROrigin />
                 </XR>

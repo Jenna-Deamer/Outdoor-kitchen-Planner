@@ -53,7 +53,7 @@
     gap: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-    height: 150px;
+    min-height: 150px;
 }
 
 .appliance-details {

@@ -40,3 +40,10 @@
 .counter-buttons button:active {
     transform: scale(0.95);
 }
+
+@media (max-width: 450px) {
+    .counter-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

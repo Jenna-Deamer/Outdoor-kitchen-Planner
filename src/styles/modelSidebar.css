@@ -58,3 +58,51 @@ aside {
     font-size: var(--font-size-xs);
     font-style: italic;
 }
+/* Mobile */
+.sidebar-toggle {
+    display: none; /*>950 hide button*/
+}
+@media (max-width: 950px) {
+    aside {
+        position: fixed;
+        left: -200px; /* Hide offscreen, matches width */
+        height: 100vh;
+        transition: transform 0.3s ease;
+        z-index: 100;
+    }
+    
+    aside.active {
+        transform: translateX(200px); /* Slide in when active */
+    }
+    
+    .sidebar-toggle {
+        display: flex;
+        position: fixed;
+        top: 50%;
+        left: 0;
+        width: 30px;
+        height: 60px;
+        background-color: var(--action-color);
+        border-radius: 0 8px 8px 0;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 101;
+        transition: left 0.3s ease;
+    }
+    
+    .sidebar-toggle.active {
+        left: 200px;
+    }
+    
+    .sidebar-toggle::after {
+        content: "›";
+        color: var(--white);
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .sidebar-toggle.active::after {
+        content: "‹";
+    }
+}

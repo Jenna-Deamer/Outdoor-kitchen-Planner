@@ -1,0 +1,33 @@
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    border-left: 4px solid var(--action-color);
+    max-width: 80%;
+  }
+  
+  .notification.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  
+  .notification p {
+    font-weight: 500;
+  }
+  
+  @media (max-width: 600px) {
+    .notification {
+      width: 90%;
+      padding: 0.75rem 1rem;
+    }
+  }

@@ -7,6 +7,7 @@ import { createXRStore, XR, XROrigin } from "@react-three/xr";
 import ModelSidebar from "./components/ModelSidebar";
 import CounterSelection from "./components/CounterSelection";
 import ARUIElement from "./components/ARUIElement";
+import CustomNotification from "./components/CustomNotification";
 
 // Models
 import Ground from "./components/models/Ground";
@@ -28,10 +29,19 @@ function App() {
     const [selectedCounterType, setSelectedCounterType] = useState<
         string | null
     >(null);
+    const AR_NOT_SUPPORTED_MSG = "AR is not supported on this device or browser. Please try on an AR-compatible device.";
     const [arSessionId, setArSessionId] = useState<number>(0);
+    const [notification, setNotification] = useState({
+        visible: false,
+        message: ""
+    });
 
     const handleSelectCounter = (counterType: string) => {
         setSelectedCounterType(counterType);
+    };
+
+    const showNotification = (message: string) => {
+        setNotification({ visible: true, message });
     };
 
     const handleARSession = async () => {
@@ -53,15 +63,20 @@ function App() {
                 };
 
                 newSession.addEventListener("end", onSessionEnd);
+            } else {
+                // If newSession is null/undefined but no error was thrown
+                showNotification(AR_NOT_SUPPORTED_MSG);
             }
         } catch (error) {
             console.error("AR session error:", error);
+            showNotification(AR_NOT_SUPPORTED_MSG);
         }
     };
 
     const handleExitARSession = async () => {
         if (session) {
             try {
+                // Clear session
                 console.log("Ending AR session...");
                 await session.end();
                 setSession(null);
@@ -128,12 +143,19 @@ function App() {
 
     return (
         <main>
+            <CustomNotification
+                message={notification.message}
+                visible={notification.visible}
+                onClose={() => setNotification({ ...notification, visible: false })}
+                duration={5000}
+            />
+
             {!session && (
                 <button className="ar-button" onClick={handleARSession}>
                     View AR
                 </button>
-            )}
 
+            )}
             <ModelSidebar
                 onAddCabinet={handleAddCabinet}
                 onAddFridge={handleAddFridge}

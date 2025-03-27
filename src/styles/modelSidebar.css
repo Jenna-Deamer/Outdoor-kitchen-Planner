@@ -35,6 +35,8 @@ aside {
     background-color: var(--secondary-color);
     padding: .5rem;
     border-radius: 8px;
+    transition: .5s ease-in-out;
+    border: 2px solid transparent;
 }
 
 .model-control-buttons {
@@ -57,6 +59,12 @@ aside {
 #sidebar-footer small {
     font-size: var(--font-size-xs);
     font-style: italic;
+}
+
+.model-control-card.selected {
+    border: 2px solid var(--action-color);
+    box-shadow: 0 0 8px rgba(135, 35, 65, 0.5);
+  
 }
 /* Mobile */
 .sidebar-toggle {

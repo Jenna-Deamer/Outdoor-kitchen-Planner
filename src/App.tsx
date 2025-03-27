@@ -162,6 +162,7 @@ function App() {
                 models={models}
                 onSelectModel={handleModelClick}
                 onDeleteModel={handleDeleteModel}
+                selectedModelIndex={selectedModelIndex} 
             />
 
             <Canvas camera={{ position: [0, 2, 4] }} className="canvas">

@@ -43,7 +43,7 @@ function Cabinet({
             {isSelected && (
                 <mesh position={center}>
                     <boxGeometry args={size} />
-                    <meshBasicMaterial color="yellow" wireframe />
+                    <meshBasicMaterial color="#d94559" wireframe />
                 </mesh>
             )}
         </group>

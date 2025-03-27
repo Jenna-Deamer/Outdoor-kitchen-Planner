@@ -11,6 +11,7 @@ interface ModelSidebarProps {
     models: { type: string; position: [number, number, number] }[];
     onSelectModel: (index: number) => void;
     onDeleteModel: (index: number) => void;
+    selectedModelIndex: number | null;
 }
 
 function ModelSidebar({
@@ -18,7 +19,8 @@ function ModelSidebar({
     onAddFridge,
     models,
     onSelectModel,
-    onDeleteModel
+    onDeleteModel,
+    selectedModelIndex
 }: ModelSidebarProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -53,7 +55,9 @@ function ModelSidebar({
               </div>
               <div id="sidebar-model-list">
                   {models.map((model, index) => (
-                      <div key={index} className="model-control-card">
+                      <div key={index}
+                      className={`model-control-card ${selectedModelIndex === index ? 'selected' : ''}`}
+                      >
                           <h3>
                               {model.type.charAt(0).toUpperCase() +
                                   model.type.slice(1)}

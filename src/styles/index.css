@@ -71,7 +71,7 @@ button {
     padding: 0.5rem 0.75rem;
     background-color: var(--action-color);
     color: var(--white);
-    border: unset;
+    border: unset;  
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -82,6 +82,10 @@ button:hover {
     background-color: var(--hover-color);
 }
 
+button:focus {
+    outline: 2px solid var(--white);
+  
+}
 .ar-button {
     position: fixed;
     top: 20px;

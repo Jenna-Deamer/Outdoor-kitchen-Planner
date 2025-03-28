@@ -8,6 +8,7 @@ import ModelSidebar from "./components/ModelSidebar";
 import CounterSelection from "./components/CounterSelection";
 import ARUIElement from "./components/ARUIElement";
 import CustomNotification from "./components/CustomNotification";
+import ModelControlButtons from "./components/ModelControlButtons";
 
 // Models
 import Ground from "./components/models/Ground";
@@ -237,6 +238,11 @@ function App() {
                     <XROrigin />
                 </XR>
             </Canvas>
+        <ModelControlButtons 
+            onMoveLeft={() => handleMoveModel("left")} 
+            onMoveRight={() => handleMoveModel("right")} 
+            disabled={selectedModelIndex === null} // Set to true if no model is selected
+       />
         </main>
     );
 }

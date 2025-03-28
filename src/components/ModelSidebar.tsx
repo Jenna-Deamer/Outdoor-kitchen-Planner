@@ -71,8 +71,7 @@ function ModelSidebar({
               </div>
               <div id="sidebar-footer">
                   <small>
-                      Click on a model to select, then use the arrow keys
-                      to&nbsp;move!
+                  Select model, use arrow keys to move or the buttons
                   </small>
               </div>
           </aside>

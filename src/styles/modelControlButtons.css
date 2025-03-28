@@ -1,0 +1,25 @@
+.model-controls-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    gap: 20px;
+}
+
+.movement-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: flex;
+}
+
+.movement-button.disabled {
+    background-color: #666;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+}

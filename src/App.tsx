@@ -18,8 +18,10 @@ import Cabinet from "./components/models/Cabinet";
 import Fridge from "./components/models/Fridge";
 import SkyComponent from "./components/SkyBox";
 
-type Model = { type: string; position: [number, number, number] };
-
+// Data
+import { COUNTER_WIDTH } from "./data/config";
+import { MODEL_CONFIG } from "./data/config";
+type Model = { type: string; position: [number, number, number]; width?: number };
 function App() {
     const [models, setModels] = useState<Model[]>([]);
     const [session, setSession] = useState<XRSession | null>(null);
@@ -89,13 +91,27 @@ function App() {
     };
 
     const handleAddCabinet = () => {
-        setModels([...models, { type: "cabinet", position: [0, 0.2, 0] }]);
-    };
-
-    const handleAddFridge = () => {
-        setModels([...models, { type: "fridge", position: [0, 0.2, 0] }]);
-    };
-
+        const config = MODEL_CONFIG.cabinet;
+        const initialX = -COUNTER_WIDTH/2 + config.width/2 + config.edgeGap;
+        
+        setModels([...models, { 
+          type: "cabinet", 
+          position: [initialX, config.offsetY, 0],
+          width: config.width
+        }]);
+      };
+      
+      const handleAddFridge = () => {
+        const config = MODEL_CONFIG.fridge;
+        const initialX = -COUNTER_WIDTH/2 + config.width/2 + config.edgeGap;
+        
+        setModels([...models, { 
+          type: "fridge", 
+          position: [initialX, config.offsetY, 0],
+          width: config.width
+        }]);
+      };
+      
     const handleModelClick = (index: number) => {
         setSelectedModelIndex(index);
     };
@@ -107,27 +123,43 @@ function App() {
         setSelectedModelIndex(null);
     };
 
-    const handleMoveModel = useCallback(
-        (direction: "left" | "right") => {
-            if (selectedModelIndex === null) return;
-
-            setModels(
-                models.map((model, index) => {
-                    if (index === selectedModelIndex) {
-                        const moveDistance = 0.1;
-                        const newPosition: [number, number, number] = [
-                            ...model.position,
-                        ];
-                        newPosition[0] +=
-                            direction === "left" ? -moveDistance : moveDistance;
-                        return { ...model, position: newPosition };
-                    }
-                    return model;
-                })
-            );
-        },
-        [selectedModelIndex, models]
-    );
+    const handleMoveModel = useCallback((direction: "left" | "right") => {
+        if (selectedModelIndex === null) return;
+      
+        setModels(prevModels => {
+          return prevModels.map((model, index) => {
+            if (index === selectedModelIndex) {
+              const MOVE_STEP = 0.05; // Smaller step for precision
+              const config = MODEL_CONFIG[model.type as keyof typeof MODEL_CONFIG];
+              
+              // Current position components
+              const [currentX, y, z] = model.position;
+              
+              // Calculate boundaries
+              const counterHalfWidth = COUNTER_WIDTH / 2;
+              const modelHalfWidth = config.width / 2;
+              
+              // Left boundary: counter edge + model half-width + desired gap
+              const leftBound = -counterHalfWidth + modelHalfWidth + config.edgeGap;
+              
+              // Right boundary: counter edge - model half-width - desired gap
+              const rightBound = counterHalfWidth - modelHalfWidth - config.edgeGap;
+              
+              // Calculate new position
+              let newX = currentX + (direction === 'left' ? -MOVE_STEP : MOVE_STEP);
+              
+              // Clamp to boundaries
+              newX = Math.max(leftBound, Math.min(newX, rightBound));
+              
+              return {
+                ...model,
+                position: [newX, y, z]
+              };
+            }
+            return model;
+          });
+        });
+      }, [selectedModelIndex]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {

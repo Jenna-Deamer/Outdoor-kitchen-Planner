@@ -19,8 +19,8 @@ import Fridge from "./components/models/Fridge";
 import SkyComponent from "./components/SkyBox";
 
 // Data
-import { COUNTER_WIDTH } from "./data/config";
-import { MODEL_CONFIG } from "./data/config";
+import { COUNTER_WIDTH } from "./data/modelsConfig";
+import { MODEL_CONFIG } from "./data/modelsConfig";
 type Model = { type: string; position: [number, number, number]; width?: number };
 function App() {
     const [models, setModels] = useState<Model[]>([]);
@@ -129,13 +129,13 @@ function App() {
         setModels(prevModels => {
           return prevModels.map((model, index) => {
             if (index === selectedModelIndex) {
-              const MOVE_STEP = 0.05; // Smaller step for precision
+              const MOVE_STEP = 0.05; // .5cm
               const config = MODEL_CONFIG[model.type as keyof typeof MODEL_CONFIG];
               
-              // Current position components
+              // Current position of components
               const [currentX, y, z] = model.position;
               
-              // Calculate boundaries
+              // Calculate boundaries to prevent models going over the edge of the counter
               const counterHalfWidth = COUNTER_WIDTH / 2;
               const modelHalfWidth = config.width / 2;
               
@@ -145,12 +145,13 @@ function App() {
               // Right boundary: counter edge - model half-width - desired gap
               const rightBound = counterHalfWidth - modelHalfWidth - config.edgeGap;
               
-              // Calculate new position
+              // Calculate next/new x position in a temp var. If moving left, subtract MOVE_STEP; if moving right, add MOVE_STEP
               let newX = currentX + (direction === 'left' ? -MOVE_STEP : MOVE_STEP);
               
-              // Clamp to boundaries
+              // Clamp to boundaries forcing the next x pos to stay within the bounds. by checking if its > left or right bound
               newX = Math.max(leftBound, Math.min(newX, rightBound));
-              
+            
+              // spread model properties & return with updated position
               return {
                 ...model,
                 position: [newX, y, z]
@@ -159,7 +160,7 @@ function App() {
             return model;
           });
         });
-      }, [selectedModelIndex]);
+      }, [selectedModelIndex]); // Updates whenever selectedModelIndex changes
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {

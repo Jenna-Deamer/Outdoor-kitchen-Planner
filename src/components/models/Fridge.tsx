@@ -14,7 +14,7 @@ function Fridge({
     isSelected: boolean;
 }) {
     const { scene } = useGLTF(fridgeModel);
-    // Creates a memoized clone of the scene UseMemo ensures only clones when dependcy changes
+    // Creates a memoized clone of the scene UseMemo ensures it only gets cloned when dependency changes
     const clonedScene = useMemo(() => scene.clone(), [scene]); // without cloning the scene would create a new model and dispose of the old one (Preventing multiple of the same model)
     const ref = useRef<THREE.Group>(null);
     const [size, setSize] = useState<[number, number, number]>([1, 1, 1]);
